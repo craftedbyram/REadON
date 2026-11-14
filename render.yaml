@@ -5,10 +5,12 @@ services:
     plan: free
     region: oregon
     buildCommand: npm install --production
-    startCommand: npm start
+    startCommand: node --experimental-sqlite server.js
     envVars:
       - key: NODE_VERSION
         value: 22.12.0
+      - key: NODE_OPTIONS
+        value: "--experimental-sqlite"
       - key: OPENROUTER_MODEL
         value: google/gemini-2.0-flash-lite:free
       - key: OPENROUTER_FALLBACK_MODEL
@@ -17,3 +19,4 @@ services:
         generateValue: true
       - key: OPENROUTER_API_KEY
         sync: false
+

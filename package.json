@@ -4,10 +4,10 @@
   "description": "REadON - Assessment-First Skill Discovery and Career Development Platform",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
-    "seed": "node backend/db/seed.js",
-    "test": "node tests/test_api.js"
+    "start": "node --experimental-sqlite server.js",
+    "dev": "node --experimental-sqlite --watch server.js",
+    "seed": "node --experimental-sqlite backend/db/seed.js",
+    "test": "node --experimental-sqlite tests/test_api.js"
   },
   "engines": {
     "node": ">=22.0.0"

@@ -4,7 +4,22 @@
  * PRD §16.3 Database Entities
  */
 
-const { DatabaseSync } = require('node:sqlite');
+let DatabaseSync;
+try {
+  const sqliteModule = require('node:sqlite');
+  DatabaseSync = sqliteModule.DatabaseSync;
+} catch (err) {
+  if (err.code === 'ERR_UNKNOWN_BUILTIN_MODULE') {
+    console.error(`
+========================================================================
+❌ ERROR: In Node 22, 'node:sqlite' requires the '--experimental-sqlite' flag!
+👉 Start command: node --experimental-sqlite server.js
+👉 Or set env variable: NODE_OPTIONS="--experimental-sqlite"
+========================================================================
+`);
+  }
+  throw err;
+}
 const path = require('node:path');
 const fs = require('node:fs');
 
