@@ -28,6 +28,7 @@ try {
 const { getDatabase } = require('./backend/db/database');
 const { seed } = require('./backend/db/seed');
 const { handleApiRequest } = require('./backend/routes/api');
+const { attachSecurityHeaders, parseBoundedJson } = require('./backend/security/securityMiddleware');
 
 const PORT = parseInt(process.env.PORT || '3000', 10);
 
@@ -38,27 +39,30 @@ if (userCount === 0) {
   seed();
 }
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
+  // 1. Attach Enterprise OWASP Security Headers to every response
+  attachSecurityHeaders(res);
+
   const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   const pathname = parsedUrl.pathname;
 
-  // 1. API Route Handling
+  // 2. API Route Handling with Bounded Payload & Rate Limiting
   if (pathname.startsWith('/api/')) {
-    let bodyData = '';
-    req.on('data', chunk => { bodyData += chunk; });
-    req.on('end', () => {
-      let parsedBody = {};
-      try {
-        if (bodyData) parsedBody = JSON.parse(bodyData);
-      } catch (e) {
-        parsedBody = {};
-      }
+    try {
+      const parsedBody = await parseBoundedJson(req, 1024 * 1024); // 1MB limit
       handleApiRequest(req, res, parsedUrl, parsedBody);
-    });
+    } catch (err) {
+      if (err.message === 'Payload Too Large') {
+        res.writeHead(413, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ error: 'Payload Too Large (Max 1MB allowed)', code: 'PAYLOAD_TOO_LARGE' }));
+      }
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: 'Malformed JSON Request Body', code: 'INVALID_JSON' }));
+    }
     return;
   }
 
-  // 2. Static File Serving (Frontend Application)
+  // 3. Static File Serving (Frontend Application)
   let filePath = '';
   if (pathname === '/' || pathname === '/index.html') {
     filePath = path.join(__dirname, 'index.html');
@@ -66,10 +70,11 @@ const server = http.createServer((req, res) => {
     filePath = path.join(__dirname, pathname);
   }
 
-  // Security check: ensure path is inside project directory
-  if (!filePath.startsWith(__dirname)) {
-    res.writeHead(403);
-    return res.end('Access denied');
+  // Security check: Directory traversal defense
+  const normalizedPath = path.normalize(filePath);
+  if (!normalizedPath.startsWith(__dirname)) {
+    res.writeHead(403, { 'Content-Type': 'text/plain' });
+    return res.end('Access denied: Directory traversal detected');
   }
 
   const ext = path.extname(filePath).toLowerCase();

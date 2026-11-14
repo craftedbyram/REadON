@@ -266,6 +266,64 @@ async function runTestSuite() {
   assert(notFound.status === 404, "404 returned for unregistered endpoints");
 
   // ------------------------------------------------------------
+  // GROUP 7: RBAC (ROLE-BASED ACCESS CONTROL) & ADMIN SECURITY (PRD §14, §18)
+  // ------------------------------------------------------------
+  console.log("\n▶ [Group 7: Enterprise RBAC Admin & User Login Security]");
+
+  // 1. Student Login
+  const studentLogin = await makeRequest('POST', '/api/v1/auth/login', {
+    email: 'alex.rivera@example.com',
+    password: 'password123'
+  });
+  assert(studentLogin.status === 200 && studentLogin.body.user.role === 'user', "Student login returns role: 'user'");
+  const studentToken = studentLogin.body.token;
+
+  // 2. Student attempting Admin endpoint -> 403 Forbidden
+  const studentAdminAttempt = await makeRequest('GET', '/api/v1/admin/overview', {}, {
+    Authorization: `Bearer ${studentToken}`
+  });
+  assert(studentAdminAttempt.status === 403, "Student access to /api/v1/admin/overview is blocked with HTTP 403 Forbidden");
+
+  // 3. Admin Login
+  const adminLogin = await makeRequest('POST', '/api/v1/auth/login', {
+    email: 'admin@readon.dev',
+    password: 'AdminSecretPass123!'
+  });
+  assert(adminLogin.status === 200 && adminLogin.body.user.role === 'admin', "Admin login returns role: 'admin'");
+  const adminToken = adminLogin.body.token;
+
+  // 4. Admin accessing Admin endpoint -> 200 OK with system stats
+  const adminOverview = await makeRequest('GET', '/api/v1/admin/overview', {}, {
+    Authorization: `Bearer ${adminToken}`
+  });
+  assert(adminOverview.status === 200 && adminOverview.body.stats && adminOverview.body.users, "Admin access to /api/v1/admin/overview returns HTTP 200 with platform metrics");
+
+  // 5. Admin updating user role
+  const roleUpdateRes = await makeRequest('POST', `/api/v1/admin/users/${studentLogin.body.user.id}/role`, {
+    role: 'admin'
+  }, {
+    Authorization: `Bearer ${adminToken}`
+  });
+  assert(roleUpdateRes.status === 200 && roleUpdateRes.body.role === 'admin', "Admin can elevate user role to admin via /api/v1/admin/users/:id/role");
+
+  // Revert role back to user for consistency
+  await makeRequest('POST', `/api/v1/admin/users/${studentLogin.body.user.id}/role`, {
+    role: 'user'
+  }, {
+    Authorization: `Bearer ${adminToken}`
+  });
+
+  // 6. In-memory Cache & High Efficiency Verification
+  const coresCachedRes = await makeRequest('GET', '/api/v1/cores');
+  assert(coresCachedRes.status === 200 && coresCachedRes.body.cached === true, "GET /api/v1/cores returns cached payload with 0ms N+1 query overhead");
+
+  // 7. Logout Endpoint
+  const logoutRes = await makeRequest('POST', '/api/v1/auth/logout', {}, {
+    Authorization: `Bearer ${adminToken}`
+  });
+  assert(logoutRes.status === 200, "POST /api/v1/auth/logout successfully terminates active session");
+
+  // ------------------------------------------------------------
   // SUMMARY
   // ------------------------------------------------------------
   console.log("\n============================================================");

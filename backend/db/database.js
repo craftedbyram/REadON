@@ -38,12 +38,13 @@ function getDatabase() {
 
 function initSchema(db) {
   db.exec(`
-    -- Users and Authentication (PRD §14.1)
+    -- Users and Authentication (PRD §14.1 & RBAC Security)
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
       email TEXT UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
       name TEXT NOT NULL,
+      role TEXT NOT NULL DEFAULT 'user', -- 'user' or 'admin'
       experience_level TEXT DEFAULT 'College Student / Fresher',
       target_role_id TEXT DEFAULT 'fs_dev',
       preferred_language TEXT DEFAULT 'JavaScript / TypeScript',
@@ -186,6 +187,13 @@ function initSchema(db) {
     CREATE INDEX IF NOT EXISTS idx_learning_resources_skill_id ON learning_resources(skill_id);
     CREATE INDEX IF NOT EXISTS idx_user_learning_progress_user_id ON user_learning_progress(user_id);
   `);
+
+  // Safe schema migration for existing databases (adds role column if missing)
+  try {
+    db.exec(`ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'user';`);
+  } catch (e) {
+    // Column already exists
+  }
 }
 
 module.exports = {

@@ -10,27 +10,51 @@ function seed() {
   const db = getDatabase();
   console.log("Seeding REadON database...");
 
-  // 1. Seed Demo User
+  // 1. Seed Demo Student User & Admin User (PRD §14.1 & Security RBAC)
   const userId = 'usr_alex_rivera';
   const existingUser = db.prepare('SELECT id FROM users WHERE email = ?').get('alex.rivera@example.com');
   
   if (!existingUser) {
     const pwdHash = hashPassword('password123');
     db.prepare(`
-      INSERT INTO users (id, email, password_hash, name, experience_level, target_role_id, xp, streak, level)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO users (id, email, password_hash, name, role, experience_level, target_role_id, xp, streak, level)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       userId,
       'alex.rivera@example.com',
       pwdHash,
       'Alex Rivera',
+      'user',
       'College Student / Fresher',
       'fs_dev',
       850,
       3,
       2
     );
-    console.log("✓ Default user created: alex.rivera@example.com / password123");
+    console.log("✓ Default student created: alex.rivera@example.com / password123 (role: user)");
+  }
+
+  // Seed Admin User
+  const adminId = 'usr_admin_master';
+  const existingAdmin = db.prepare('SELECT id FROM users WHERE email = ?').get('admin@readon.dev');
+  if (!existingAdmin) {
+    const adminPwdHash = hashPassword('AdminSecretPass123!');
+    db.prepare(`
+      INSERT INTO users (id, email, password_hash, name, role, experience_level, target_role_id, xp, streak, level)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      adminId,
+      'admin@readon.dev',
+      adminPwdHash,
+      'System Administrator',
+      'admin',
+      'Lead Architect',
+      'fs_dev',
+      9999,
+      42,
+      10
+    );
+    console.log("✓ Default admin created: admin@readon.dev / AdminSecretPass123! (role: admin)");
   }
 
   // 2. Seed 7 Cores (PRD §7)
@@ -101,7 +125,7 @@ function seed() {
   ];
 
   const insertCore = db.prepare(`
-    INSERT OR REPLACE INTO cores (id, name, badge, icon, accent_hex, desc, intro)
+    INSERT OR IGNORE INTO cores (id, name, badge, icon, accent_hex, desc, intro)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
 
@@ -163,7 +187,7 @@ function seed() {
   ];
 
   const insertSkill = db.prepare(`
-    INSERT OR REPLACE INTO skills (id, core_id, name, desc)
+    INSERT OR IGNORE INTO skills (id, core_id, name, desc)
     VALUES (?, ?, ?, ?)
   `);
 
@@ -279,7 +303,7 @@ function seed() {
   ];
 
   const insertRole = db.prepare(`
-    INSERT OR REPLACE INTO career_roles (id, name, status, is_mvp, tagline, desc, salary, hiring_demand)
+    INSERT OR IGNORE INTO career_roles (id, name, status, is_mvp, tagline, desc, salary, hiring_demand)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
@@ -433,7 +457,7 @@ function seed() {
   ];
 
   const insertAssessment = db.prepare(`
-    INSERT OR REPLACE INTO assessments (
+    INSERT OR IGNORE INTO assessments (
       id, skill_id, type, title, scenario, instructions_json, starter_code, tests_json, time_limit, answer_key_json
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
@@ -491,7 +515,7 @@ function seed() {
   ];
 
   const insertResource = db.prepare(`
-    INSERT OR REPLACE INTO learning_resources (
+    INSERT OR IGNORE INTO learning_resources (
       id, skill_id, title, type, duration, difficulty, summary, content
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `);
@@ -511,7 +535,7 @@ function seed() {
   ];
 
   const insertEvidence = db.prepare(`
-    INSERT OR REPLACE INTO user_skill_progress (
+    INSERT OR IGNORE INTO user_skill_progress (
       user_id, skill_id, p_score, k_score, a_score, r_score, confidence, attempts
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `);
@@ -526,7 +550,7 @@ function seed() {
 
   // Seed Assessment attempt history
   db.prepare(`
-    INSERT OR REPLACE INTO assessment_attempts (
+    INSERT OR IGNORE INTO assessment_attempts (
       id, user_id, assessment_id, skill_id, type, k_score, a_score, r_score, p_score, passed, ai_feedback
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(

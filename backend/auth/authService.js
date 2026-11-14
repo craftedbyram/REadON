@@ -38,7 +38,7 @@ function getUserFromSession(token) {
   if (!token) return null;
   const db = getDatabase();
   const session = db.prepare(`
-    SELECT s.user_id, u.id, u.email, u.name, u.experience_level, u.target_role_id, u.xp, u.streak, u.level
+    SELECT s.user_id, u.id, u.email, u.name, COALESCE(u.role, 'user') as role, u.experience_level, u.target_role_id, u.xp, u.streak, u.level
     FROM sessions s
     JOIN users u ON s.user_id = u.id
     WHERE s.token = ? AND s.expires_at > CURRENT_TIMESTAMP

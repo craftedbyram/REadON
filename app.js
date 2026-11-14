@@ -1248,6 +1248,9 @@ function navigate(screenName, context = null) {
     case "settings":
       renderSettings(container);
       break;
+    case "admin":
+      renderAdminConsole(container);
+      break;
     default:
       renderDashboard(container);
   }
@@ -1280,19 +1283,36 @@ function updateNavHeader() {
   const userEls = document.querySelectorAll("#nav-username, #sidebar-username");
   const avatarEl = document.getElementById("user-avatar");
 
-  const initials = appState.user.name.split(" ").map(w => w[0]).join("").slice(0, 2) || "AU";
+  const userName = appState.user?.name || "Alex Rivera";
+  const initials = userName.split(" ").map(w => w[0]).join("").slice(0, 2) || "AU";
 
-  streakEls.forEach(el => { if (el) el.textContent = `${appState.gamification.streak}d`; });
-  xpEls.forEach(el => { if (el) el.textContent = `${appState.gamification.xp} XP`; });
-  userEls.forEach(el => { if (el) el.textContent = appState.user.name; });
+  streakEls.forEach(el => { if (el) el.textContent = `${appState.gamification?.streak || 3}d`; });
+  xpEls.forEach(el => { if (el) el.textContent = `${appState.gamification?.xp || 850} XP`; });
+  userEls.forEach(el => { if (el) el.textContent = userName; });
   if (avatarEl) avatarEl.textContent = initials;
 
   const sidebarRole = document.getElementById("sidebar-role");
   const sidebarUsername = document.getElementById("sidebar-username");
-  if (sidebarUsername) sidebarUsername.textContent = appState.user.name;
+  if (sidebarUsername) sidebarUsername.textContent = userName;
+
+  const role = appState.user?.role || "user";
   if (sidebarRole) {
-    const targetRole = CAREER_ROLES.find(r => r.id === appState.user.targetRoleId);
-    sidebarRole.textContent = targetRole ? targetRole.name : "Skill Explorer";
+    if (role === "admin") {
+      sidebarRole.innerHTML = '<span style="color:#ef4444; font-weight:700;">Admin · Platform Lead</span>';
+    } else {
+      const targetRole = CAREER_ROLES.find(r => r.id === appState.user?.targetRoleId);
+      sidebarRole.textContent = targetRole ? targetRole.name : "Skill Explorer";
+    }
+  }
+
+  const adminNav = document.getElementById("nav-item-admin");
+  if (adminNav) {
+    adminNav.style.display = role === "admin" ? "flex" : "none";
+  }
+
+  const authLabel = document.getElementById("auth-btn-label");
+  if (authLabel) {
+    authLabel.textContent = role === "admin" ? "Admin: Signed In" : "Student: Alex";
   }
 }
 
@@ -3324,7 +3344,376 @@ function resetAllData() {
 }
 
 // ==========================================
-// 10. INITIALIZATION
+// 10. ADMIN CONSOLE & RBAC ENGINE (PRD §14 & §18)
+// ==========================================
+
+async function renderAdminConsole(container) {
+  const user = appState.user || {};
+  if (user.role !== 'admin') {
+    container.innerHTML = `
+      <div class="max-w-xl mx-auto py-16 text-center">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-3xl mb-4 text-red-500">
+          🛡️
+        </div>
+        <h1 class="text-2xl font-bold mb-2">Administrator Access Required</h1>
+        <p class="text-sm text-[var(--text-muted)] mb-6">
+          This management console is protected by enterprise Role-Based Access Control (RBAC). Your current session is authenticated as <strong>${user.name || 'Student'}</strong> (role: <code>${user.role || 'user'}</code>).
+        </p>
+        <div class="flex justify-center gap-3">
+          <button onclick="quickLogin('admin')" class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs transition shadow-lg flex items-center gap-2">
+            <span>🛡️</span> Sign In as Administrator
+          </button>
+          <button onclick="navigate('dashboard')" class="px-5 py-2.5 rounded-xl bg-[var(--surface-2)] border border-[var(--surface-border)] text-xs font-semibold hover:bg-[var(--surface-hover)]">
+            Return to Dashboard
+          </button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="py-4">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-red-500/20 text-red-400 border border-red-500/30">Admin RBAC Portal</span>
+            <span class="text-xs text-[var(--text-muted)]">Enterprise Operations & User Management</span>
+          </div>
+          <h1 class="text-2xl font-bold m-0 text-[var(--text-main)]">System Administration Console</h1>
+        </div>
+        <button onclick="renderAdminConsole(document.getElementById('screen-container'))" class="px-3 py-1.5 rounded-lg border border-[var(--surface-border)] bg-[var(--surface)] text-xs font-semibold hover:bg-[var(--surface-hover)] flex items-center gap-1.5 text-[var(--text-muted)]">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Refresh Data
+        </button>
+      </div>
+
+      <div id="admin-data-loading" class="text-center py-12 text-[var(--text-muted)] text-sm">
+        <div class="inline-block animate-spin text-2xl mb-2">⚡</div>
+        <div>Loading enterprise telemetry and user directory...</div>
+      </div>
+      <div id="admin-data-content" class="hidden space-y-6"></div>
+    </div>
+  `;
+
+  try {
+    const res = await fetch('/api/v1/admin/overview', {
+      headers: {
+        'Authorization': `Bearer ${user.token || ''}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: Access Denied`);
+    }
+
+    const data = await res.json();
+    const stats = data.stats || {};
+    const users = data.users || [];
+    const submissions = data.recentSubmissions || [];
+
+    document.getElementById('admin-data-loading')?.classList.add('hidden');
+    const content = document.getElementById('admin-data-content');
+    if (!content) return;
+    content.classList.remove('hidden');
+
+    content.innerHTML = `
+      <!-- KPI Stats Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-4 rounded-xl border border-[var(--surface-border)] bg-[var(--surface)]">
+          <div class="text-xs font-semibold text-[var(--text-muted)] mb-1">Registered Users</div>
+          <div class="text-2xl font-bold text-indigo-400">${stats.totalUsers || 0}</div>
+          <div class="text-[11px] text-[var(--text-subtle)] mt-1">Multi-role RBAC active</div>
+        </div>
+        <div class="p-4 rounded-xl border border-[var(--surface-border)] bg-[var(--surface)]">
+          <div class="text-xs font-semibold text-[var(--text-muted)] mb-1">Total Assessments</div>
+          <div class="text-2xl font-bold text-purple-400">${stats.totalAttempts || 0}</div>
+          <div class="text-[11px] text-[var(--text-subtle)] mt-1">Sandboxed code & practicals</div>
+        </div>
+        <div class="p-4 rounded-xl border border-[var(--surface-border)] bg-[var(--surface)]">
+          <div class="text-xs font-semibold text-[var(--text-muted)] mb-1">Platform Pass Rate</div>
+          <div class="text-2xl font-bold text-emerald-400">${stats.passRate || 0}%</div>
+          <div class="text-[11px] text-[var(--text-subtle)] mt-1">Passing score ≥ 70%</div>
+        </div>
+        <div class="p-4 rounded-xl border border-[var(--surface-border)] bg-[var(--surface)]">
+          <div class="text-xs font-semibold text-[var(--text-muted)] mb-1">Avg Score (P)</div>
+          <div class="text-2xl font-bold text-amber-400">${stats.avgScore || 0}%</div>
+          <div class="text-[11px] text-[var(--text-subtle)] mt-1">Formula: 0.3K + 0.5A + 0.2R</div>
+        </div>
+      </div>
+
+      <!-- Users Management Table -->
+      <div class="rounded-xl border border-[var(--surface-border)] bg-[var(--surface)] overflow-hidden">
+        <div class="p-4 border-b border-[var(--surface-border)] flex items-center justify-between">
+          <h2 class="text-base font-bold text-[var(--text-main)]">User Management & Role Permissions</h2>
+          <span class="text-xs text-[var(--text-muted)]">${users.length} accounts loaded</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-[var(--bg-subtle)] border-b border-[var(--surface-border)] text-[var(--text-muted)]">
+              <tr>
+                <th class="p-3 font-semibold">User</th>
+                <th class="p-3 font-semibold">Email</th>
+                <th class="p-3 font-semibold">Role</th>
+                <th class="p-3 font-semibold">Target Role</th>
+                <th class="p-3 font-semibold">XP / Level</th>
+                <th class="p-3 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border)] text-[var(--text-main)]">
+              ${users.map(u => `
+                <tr class="hover:bg-[var(--surface-hover)] transition">
+                  <td class="p-3 font-semibold flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-full bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-xs">
+                      ${u.name.slice(0, 2).toUpperCase()}
+                    </div>
+                    <span>${u.name}</span>
+                  </td>
+                  <td class="p-3 font-mono text-[var(--text-muted)]">${u.email}</td>
+                  <td class="p-3">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                      u.role === 'admin'
+                        ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                        : 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
+                    }">${u.role}</span>
+                  </td>
+                  <td class="p-3 text-[var(--text-muted)]">${u.target_role_id || 'fs_dev'}</td>
+                  <td class="p-3 font-medium">${u.xp || 0} XP · Lv${u.level || 1}</td>
+                  <td class="p-3 text-right">
+                    <button onclick="toggleUserRole('${u.id}', '${u.role === 'admin' ? 'user' : 'admin'}')" class="px-2.5 py-1 rounded text-xs font-semibold border ${
+                      u.role === 'admin'
+                        ? 'border-amber-500/30 text-amber-400 hover:bg-amber-500/10'
+                        : 'border-red-500/30 text-red-400 hover:bg-red-500/10'
+                    }">
+                      ${u.role === 'admin' ? 'Demote to User' : 'Elevate to Admin'}
+                    </button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recent Submissions Audit Log -->
+      <div class="rounded-xl border border-[var(--surface-border)] bg-[var(--surface)] overflow-hidden">
+        <div class="p-4 border-b border-[var(--surface-border)]">
+          <h2 class="text-base font-bold text-[var(--text-main)]">System Assessment Audit Trail</h2>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-[var(--bg-subtle)] border-b border-[var(--surface-border)] text-[var(--text-muted)]">
+              <tr>
+                <th class="p-3 font-semibold">User</th>
+                <th class="p-3 font-semibold">Skill</th>
+                <th class="p-3 font-semibold">Score (P)</th>
+                <th class="p-3 font-semibold">Status</th>
+                <th class="p-3 font-semibold">Timestamp</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--surface-border)] text-[var(--text-main)]">
+              ${submissions.length === 0 ? `
+                <tr><td colspan="5" class="p-4 text-center text-[var(--text-muted)]">No recent submissions found.</td></tr>
+              ` : submissions.map(s => `
+                <tr class="hover:bg-[var(--surface-hover)]">
+                  <td class="p-3 font-semibold">${s.user_name || s.user_id}</td>
+                  <td class="p-3">${s.skill_name || s.skill_id}</td>
+                  <td class="p-3 font-bold">${s.score_percentage || 0}%</td>
+                  <td class="p-3">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
+                      s.passed ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+                    }">${s.passed ? 'PASSED' : 'DEFICIT'}</span>
+                  </td>
+                  <td class="p-3 text-[var(--text-muted)]">${s.created_at || 'Just now'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    document.getElementById('admin-data-loading')?.classList.add('hidden');
+    container.innerHTML += `
+      <div class="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+        Failed to load administration telemetry: ${err.message}. Please sign in with an administrator account.
+      </div>
+    `;
+  }
+}
+
+async function toggleUserRole(userId, newRole) {
+  try {
+    const res = await fetch(`/api/v1/admin/users/${userId}/role`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${appState.user?.token || ''}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ role: newRole })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showToast(data.error || 'Failed to update role', '⚠️');
+      return;
+    }
+    showToast(`User role successfully updated to ${newRole}!`, '✓');
+    renderAdminConsole(document.getElementById('screen-container'));
+  } catch (e) {
+    showToast(e.message, '⚠️');
+  }
+}
+
+// ==========================================
+// 11. AUTHENTICATION & RBAC SWITCHER MODAL
+// ==========================================
+
+function openAuthModal() {
+  const modal = document.getElementById('auth-modal');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeAuthModal() {
+  const modal = document.getElementById('auth-modal');
+  if (modal) modal.classList.add('hidden');
+  const errEl = document.getElementById('auth-error');
+  if (errEl) {
+    errEl.classList.add('hidden');
+    errEl.textContent = '';
+  }
+}
+
+async function quickLogin(role) {
+  const email = role === 'admin' ? 'admin@readon.dev' : 'alex.rivera@example.com';
+  const password = role === 'admin' ? 'AdminSecretPass123!' : 'password123';
+
+  try {
+    const res = await fetch('/api/v1/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showToast(data.error || 'Login failed', '⚠️');
+      return;
+    }
+
+    appState.user = {
+      id: data.user.id,
+      name: data.user.name,
+      email: data.user.email,
+      role: data.user.role || (role === 'admin' ? 'admin' : 'user'),
+      token: data.token,
+      targetRoleId: data.user.target_role_id || 'fs_dev',
+      experienceLevel: data.user.experience_level || 'College Student / Fresher'
+    };
+    saveState();
+    closeAuthModal();
+    updateNavHeader();
+    showToast(`Signed in successfully as ${role === 'admin' ? 'Admin' : 'Student'}!`, '✓');
+    if (role === 'admin') {
+      navigate('admin');
+    } else {
+      navigate('dashboard');
+    }
+  } catch (err) {
+    showToast(`Login error: ${err.message}`, '⚠️');
+  }
+}
+
+async function handleCustomAuth(e) {
+  e.preventDefault();
+  const email = document.getElementById('auth-email').value;
+  const password = document.getElementById('auth-password').value;
+  const errEl = document.getElementById('auth-error');
+
+  try {
+    const res = await fetch('/api/v1/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      if (errEl) {
+        errEl.textContent = data.error || 'Authentication failed';
+        errEl.classList.remove('hidden');
+      }
+      return;
+    }
+
+    appState.user = {
+      id: data.user.id,
+      name: data.user.name,
+      email: data.user.email,
+      role: data.user.role || 'user',
+      token: data.token,
+      targetRoleId: data.user.target_role_id || 'fs_dev',
+      experienceLevel: data.user.experience_level || 'College Student / Fresher'
+    };
+    saveState();
+    closeAuthModal();
+    updateNavHeader();
+    showToast(`Welcome back, ${data.user.name}!`, '✓');
+    navigate(data.user.role === 'admin' ? 'admin' : 'dashboard');
+  } catch (err) {
+    if (errEl) {
+      errEl.textContent = err.message;
+      errEl.classList.remove('hidden');
+    }
+  }
+}
+
+async function handleLogout() {
+  if (appState.user?.token) {
+    try {
+      await fetch('/api/v1/auth/logout', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${appState.user.token}` }
+      });
+    } catch (e) {}
+  }
+  appState.user = {
+    name: "Alex Rivera",
+    email: "alex.rivera@example.com",
+    role: "user",
+    token: null,
+    targetRoleId: "fs_dev",
+    experienceLevel: "College Student / Fresher"
+  };
+  saveState();
+  closeAuthModal();
+  updateNavHeader();
+  showToast("Logged out successfully", "✓");
+  navigate('dashboard');
+}
+
+// Debounced global search for frontend efficiency
+let _searchDebounceTimer = null;
+function handleSearch(query) {
+  clearTimeout(_searchDebounceTimer);
+  _searchDebounceTimer = setTimeout(() => {
+    const q = (query || '').trim().toLowerCase();
+    if (!q) return;
+
+    // Fast search across cores and roles
+    const matchedCore = CORES.find(c => c.name.toLowerCase().includes(q) || c.id.toLowerCase().includes(q));
+    const matchedRole = CAREER_ROLES.find(r => r.name.toLowerCase().includes(q) || r.id.toLowerCase().includes(q));
+
+    if (matchedCore) {
+      navigate('cores');
+      showToast(`Showing technical core: ${matchedCore.name}`, '🔍');
+    } else if (matchedRole) {
+      navigate('roles');
+      showToast(`Found career role: ${matchedRole.name}`, '🎯');
+    }
+  }, 250);
+}
+
+// ==========================================
+// 12. INITIALIZATION
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", () => {
