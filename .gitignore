@@ -1,0 +1,30 @@
+# Secrets & Environment Configurations
+.env
+.env.*
+!.env.example
+
+# Local SQLite Database & WAL logs
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+readon.sqlite
+
+# Node Dependencies
+node_modules/
+
+# Logs & Temporary Sandbox Scripts
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.tmp/
+*.tmp
+*.tmp.js
+
+# OS & Editor generated files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+

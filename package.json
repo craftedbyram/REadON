@@ -1,0 +1,21 @@
+{
+  "name": "readon-platform",
+  "version": "1.0.0",
+  "description": "REadON - Assessment-First Skill Discovery and Career Development Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node backend/db/seed.js",
+    "test": "node tests/test_api.js"
+  },
+  "keywords": [
+    "skill-assessment",
+    "career-development",
+    "openrouter",
+    "gamification",
+    "readon"
+  ],
+  "author": "REadON Engineering",
+  "license": "MIT"
+}

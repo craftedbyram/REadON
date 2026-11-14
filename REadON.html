@@ -1,0 +1,4443 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>REadON – Know Your Skills. Build Your Future.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: ['class', '[data-theme="dark"]'],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
+      },
+      colors: {
+        brand: {
+          50: '#eef2ff',
+          100: '#e0e7ff',
+          200: '#c7d2fe',
+          400: '#818cf8',
+          500: '#6366f1',
+          600: '#4f46e5',
+          700: '#4338ca',
+          800: '#3730a3',
+          900: '#312e81',
+        },
+        surface: {
+          DEFAULT: 'var(--surface)',
+          hover: 'var(--surface-hover)',
+          border: 'var(--surface-border)',
+        }
+      }
+    }
+  }
+}
+</script>
+<style>
+/* =========================================
+   DEGREED-INSPIRED CSS DESIGN SYSTEM
+   ========================================= */
+:root {
+  /* Dark mode palette - navy/indigo inspired */
+  --bg:              #0a0e1a;
+  --bg-subtle:       #0d1120;
+  --sidebar-bg:      #0f1322;
+  --sidebar-border:  #1a2040;
+  --surface:         #131929;
+  --surface-2:       #172035;
+  --surface-border:  #1e2d4a;
+  --surface-hover:   #1a2640;
+  --text-main:       #f0f4ff;
+  --text-muted:      #8896b3;
+  --text-subtle:     #4f6080;
+  --accent:          #6366f1;
+  --accent-light:    #818cf8;
+  --accent-glow:     rgba(99,102,241,0.18);
+  --accent-2:        #3b82f6;
+  --success:         #10b981;
+  --warning:         #f59e0b;
+  --danger:          #ef4444;
+  --font-family:     'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --sidebar-w:       240px;
+  --header-h:        60px;
+  --radius:          12px;
+  --radius-sm:       8px;
+  --radius-lg:       16px;
+}
+[data-theme="light"] {
+  --bg:              #f4f6fb;
+  --bg-subtle:       #eef1f8;
+  --sidebar-bg:      #1e2a4a;
+  --sidebar-border:  #263156;
+  --surface:         #ffffff;
+  --surface-2:       #f8faff;
+  --surface-border:  #dde3f0;
+  --surface-hover:   #f0f4ff;
+  --text-main:       #111827;
+  --text-muted:      #64748b;
+  --text-subtle:     #9ca3af;
+  --accent:          #4f46e5;
+  --accent-light:    #6366f1;
+  --accent-glow:     rgba(79,70,229,0.14);
+  --accent-2:        #2563eb;
+  --success:         #059669;
+  --warning:         #d97706;
+  --danger:          #dc2626;
+}
+
+/* ---- Reset & Base ---- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; padding: 0; }
+body {
+  background-color: var(--bg);
+  color: var(--text-main);
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+/* Accessibility Focus Visible Ring (WCAG 2.1 AA §2.4.7) */
+:focus-visible {
+  outline: 2px solid #818cf8 !important;
+  outline-offset: 2px !important;
+}
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid #818cf8 !important;
+  outline-offset: 2px !important;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+pre, code, textarea.code-editor-area { font-family: 'JetBrains Mono', monospace; }
+
+/* ---- App Shell - Degreed sidebar layout ---- */
+#app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ---- SIDEBAR ---- */
+#sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+#sidebar-logo {
+  padding: 20px 20px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--sidebar-border);
+  min-height: var(--header-h);
+}
+#sidebar-logo .logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(99,102,241,0.4);
+}
+#sidebar-logo .logo-text {
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.5px;
+  color: var(--text-main);
+}
+[data-theme="light"] #sidebar-logo .logo-text { color: #fff; }
+#sidebar-logo .logo-text span { color: #818cf8; }
+#sidebar-logo .logo-badge {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 2px 5px;
+  background: rgba(99,102,241,0.25);
+  color: #818cf8;
+  border: 1px solid rgba(99,102,241,0.4);
+  border-radius: 5px;
+  text-transform: uppercase;
+}
+
+/* Nav items */
+#sidebar-nav {
+  flex: 1;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  padding: 10px 10px 4px;
+  margin-top: 4px;
+}
+[data-theme="light"] .nav-section-label { color: rgba(255,255,255,0.4); }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  position: relative;
+  user-select: none;
+}
+[data-theme="light"] .nav-item { color: rgba(255,255,255,0.65); }
+.nav-item:hover {
+  background: rgba(99,102,241,0.12);
+  color: var(--text-main);
+}
+[data-theme="light"] .nav-item:hover { color: #fff; }
+.nav-item.active {
+  background: rgba(99,102,241,0.2);
+  color: #818cf8;
+  font-weight: 600;
+}
+[data-theme="light"] .nav-item.active { color: #c7d2fe; }
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 20%; bottom: 20%;
+  width: 3px;
+  background: #6366f1;
+  border-radius: 0 3px 3px 0;
+}
+.nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+.nav-item .nav-badge {
+  margin-left: auto;
+  background: #6366f1;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 20px;
+}
+
+/* Sidebar footer */
+#sidebar-footer {
+  padding: 12px 10px;
+  border-top: 1px solid var(--sidebar-border);
+}
+#user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+#user-card:hover { background: rgba(99,102,241,0.1); }
+#user-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: white;
+  flex-shrink: 0;
+}
+#user-info { flex: 1; min-width: 0; }
+#user-info .user-name {
+  font-size: 0.8125rem; font-weight: 600;
+  color: var(--text-main); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+[data-theme="light"] #user-info .user-name { color: #fff; }
+#user-info .user-role {
+  font-size: 0.6875rem; color: var(--text-subtle);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+[data-theme="light"] #user-info .user-role { color: rgba(255,255,255,0.4); }
+
+/* ---- MAIN CONTENT ---- */
+#main-wrapper {
+  flex: 1;
+  margin-left: var(--sidebar-w);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Top Header Bar */
+#top-header {
+  height: var(--header-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--surface-border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+#header-search {
+  flex: 1;
+  max-width: 400px;
+  position: relative;
+}
+#header-search input {
+  width: 100%;
+  background: var(--bg-subtle);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 7px 12px 7px 36px;
+  font-size: 0.875rem;
+  color: var(--text-main);
+  outline: none;
+  font-family: var(--font-family);
+  transition: border-color 0.15s;
+}
+#header-search input:focus { border-color: var(--accent); }
+#header-search input::placeholder { color: var(--text-subtle); }
+#header-search svg {
+  position: absolute;
+  left: 10px; top: 50%; transform: translateY(-50%);
+  width: 16px; height: 16px;
+  color: var(--text-subtle); pointer-events: none;
+}
+#header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.header-pill {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--surface-border);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: default;
+}
+#theme-toggle-btn {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--surface-border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+#theme-toggle-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Main Content */
+#main-content {
+  flex: 1;
+  padding: 28px 32px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ---- DESIGN TOKENS / CARDS ---- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  border-color: rgba(99,102,241,0.3);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+}
+.card-interactive {
+  cursor: pointer;
+}
+.card-interactive:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+/* Page header */
+.page-header {
+  margin-bottom: 28px;
+}
+.page-header h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin: 0 0 4px;
+}
+.page-header p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Stats row */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.stat-card .stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+.stat-card .stat-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+.stat-card .stat-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Progress Ring (SVG) */
+.progress-ring-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.progress-ring-wrap .ring-label {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+}
+.progress-ring-wrap .ring-pct {
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.progress-ring-wrap .ring-sub {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+/* Badge / Pill */
+.tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.tier-foundational  { background: rgba(107,114,128,0.2); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
+.tier-developing    { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+.tier-proficient    { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
+.tier-advanced      { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+.tier-master        { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+
+.status-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 0.7rem; font-weight: 600;
+}
+.status-verified   { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+.status-inprogress { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+.status-notstarted { background: rgba(99,102,241,0.1); color: #818cf8; border: 1px solid rgba(99,102,241,0.2); }
+
+/* Filter pills */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.filter-pill {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--surface-border);
+  background: var(--surface);
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+.filter-pill:hover, .filter-pill.active {
+  background: rgba(99,102,241,0.15);
+  border-color: rgba(99,102,241,0.4);
+  color: #818cf8;
+}
+
+/* Core/Pathway Cards */
+.pathway-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.pathway-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--card-accent, #6366f1);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.pathway-card:hover::before { opacity: 1; }
+.pathway-card:hover {
+  border-color: rgba(99,102,241,0.35);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  transform: translateY(-2px);
+}
+.pathway-card .card-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.pathway-card .card-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+.pathway-card .card-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.pathway-card .card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Skill card grid */
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.skill-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.2s;
+}
+.skill-card:hover {
+  border-color: rgba(99,102,241,0.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.skill-card .skill-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.skill-card .skill-desc {
+  font-size: 0.775rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.mini-bar {
+  height: 4px;
+  background: var(--surface-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.mini-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Learning resource cards */
+.resource-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.resource-card:hover {
+  border-color: rgba(99,102,241,0.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+.resource-icon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.25rem;
+}
+
+/* Career role cards */
+.role-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.2s;
+  position: relative;
+}
+.role-card.active-target {
+  border-color: rgba(99,102,241,0.6);
+  box-shadow: 0 0 0 1px rgba(99,102,241,0.3), 0 8px 32px rgba(99,102,241,0.15);
+}
+.role-card:hover {
+  border-color: rgba(99,102,241,0.35);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+}
+.demand-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 0.69rem;
+  font-weight: 700;
+}
+.demand-vhigh  { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+.demand-high   { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+.demand-surge  { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+.demand-steady { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
+
+/* Roadmap timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.timeline-item {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  padding-bottom: 24px;
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.timeline-dot {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  z-index: 1;
+}
+.timeline-connector {
+  flex: 1;
+  width: 2px;
+  background: var(--surface-border);
+  margin-top: 4px;
+}
+.timeline-item:last-child .timeline-connector { display: none; }
+.timeline-body {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  transition: border-color 0.2s;
+}
+.timeline-body:hover { border-color: rgba(99,102,241,0.3); }
+
+/* Code editor */
+.code-editor-area {
+  background: #060b16;
+  color: #e2e8f0;
+  border: 1px solid #1e293b;
+  border-radius: var(--radius-sm);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  resize: vertical;
+  padding: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.code-editor-area:focus { border-color: var(--accent); }
+
+/* Achievement badge */
+.achievement-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.2s;
+}
+.achievement-badge:hover { border-color: rgba(245,158,11,0.4); }
+.achievement-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* Gradient heading */
+.gradient-text {
+  background: linear-gradient(135deg, #818cf8 0%, #c084fc 60%, #f472b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 18px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-family);
+  box-shadow: 0 4px 14px var(--accent-glow);
+}
+.btn-primary:hover { background: #4f46e5; box-shadow: 0 6px 20px rgba(99,102,241,0.35); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 18px;
+  background: var(--surface);
+  color: var(--text-main);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-family);
+}
+.btn-secondary:hover { border-color: rgba(99,102,241,0.4); color: #818cf8; background: rgba(99,102,241,0.08); }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-family);
+}
+.btn-ghost:hover { color: var(--text-main); background: var(--surface-hover); }
+
+/* Section divider label */
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-muted);
+}
+.empty-state svg { margin: 0 auto 16px; opacity: 0.4; }
+.empty-state h3 { font-weight: 700; font-size: 1.1rem; margin: 0 0 6px; color: var(--text-main); }
+.empty-state p { font-size: 0.875rem; margin: 0; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-subtle); }
+
+/* Toast */
+#toast {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 999;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 18px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  color: var(--text-main);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  transform: translateY(80px);
+  opacity: 0;
+  pointer-events: none;
+  max-width: 340px;
+}
+#toast.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+
+/* Mobile sidebar toggle */
+#sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 99;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(2px);
+}
+#mobile-menu-btn {
+  display: none;
+  width: 36px; height: 36px;
+  align-items: center; justify-content: center;
+  border-radius: 8px;
+  border: 1px solid var(--surface-border);
+  background: var(--surface-2);
+  cursor: pointer;
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #sidebar {
+    transform: translateX(-100%);
+  }
+  #sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 32px rgba(0,0,0,0.4);
+  }
+  #sidebar-overlay.open { display: block; }
+  #main-wrapper { margin-left: 0; }
+  #mobile-menu-btn { display: flex; }
+  #main-content { padding: 20px 16px; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .skill-grid { grid-template-columns: 1fr; }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeInUp 0.3s ease both; }
+.fade-in-delay-1 { animation-delay: 0.05s; }
+.fade-in-delay-2 { animation-delay: 0.10s; }
+.fade-in-delay-3 { animation-delay: 0.15s; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner { animation: spin 0.8s linear infinite; }
+
+@keyframes ringFill {
+  from { stroke-dashoffset: var(--ring-full); }
+  to   { stroke-dashoffset: var(--ring-offset); }
+}
+.ring-animate { animation: ringFill 0.9s cubic-bezier(0.4,0,0.2,1) both; animation-delay: 0.2s; }
+
+/* Tabs */
+.tab-row {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--surface-border);
+  margin-bottom: 24px;
+}
+.tab-btn-new {
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  font-family: var(--font-family);
+  position: relative;
+  bottom: -1px;
+}
+.tab-btn-new:hover { color: var(--text-main); }
+.tab-btn-new.active {
+  color: #818cf8;
+  border-bottom-color: #6366f1;
+}
+
+/* Scoring formula highlight */
+.formula-block {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(99,102,241,0.1);
+  border: 1px solid rgba(99,102,241,0.25);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: #818cf8;
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar Overlay (mobile) -->
+<div id="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+
+<div id="app">
+  <!-- Skip link for keyboard/screen-reader navigation (WCAG 2.1 AA §2.4.1) -->
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-indigo-600 focus:text-white focus:rounded-lg focus:font-bold focus:shadow-lg focus:outline-none">
+    Skip to main content
+  </a>
+
+  <!-- ======== SIDEBAR ======== -->
+  <aside id="sidebar" aria-label="Main Navigation Sidebar">
+    <button type="button" id="sidebar-logo" onclick="navigate('dashboard')" class="w-full text-left border-none bg-transparent" aria-label="REadON Home Dashboard">
+      <div class="logo-icon">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">REad<span>ON</span></div>
+      </div>
+      <div class="logo-badge">MVP</div>
+    </button>
+
+    <nav id="sidebar-nav" aria-label="Primary Navigation">
+      <div class="nav-section-label" id="section-overview">Overview</div>
+      <button type="button" class="nav-item w-full text-left" data-target="dashboard" onclick="navigate('dashboard')" aria-label="Navigate to Dashboard">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+        Dashboard
+      </button>
+
+      <div class="nav-section-label" id="section-learn">Learn</div>
+      <button type="button" class="nav-item w-full text-left" data-target="cores" onclick="navigate('cores')" aria-label="Explore Skill Cores">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        Skill Cores
+      </button>
+      <button type="button" class="nav-item w-full text-left" data-target="learning" onclick="navigate('learning')" aria-label="Open Learning Hub">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        Learning Hub
+      </button>
+
+      <div class="nav-section-label" id="section-career">Career</div>
+      <button type="button" class="nav-item w-full text-left" data-target="assessment" onclick="navigate('assessment')" aria-label="Take Assessment">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        Assessment
+        <span class="nav-badge" id="nav-assess-badge" style="display:none">!</span>
+      </button>
+      <button type="button" class="nav-item w-full text-left" data-target="skills" onclick="navigate('skills')" aria-label="View My Skills">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        My Skills
+      </button>
+      <button type="button" class="nav-item w-full text-left" data-target="roles" onclick="navigate('roles')" aria-label="View Career Roles">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        Career Roles
+      </button>
+      <button type="button" class="nav-item w-full text-left" data-target="roadmap" onclick="navigate('roadmap')" aria-label="View Career Roadmap">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+        Roadmap
+      </button>
+
+      <div class="nav-section-label" id="section-ai">AI Advisor</div>
+      <button type="button" class="nav-item w-full text-left" data-target="aichat" onclick="navigate('aichat')" aria-label="Open AI Career & Code Mentor">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+        AI Chat Mentor
+        <span class="nav-badge" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);font-size:9px;padding:2px 6px;">NVIDIA/GEMINI</span>
+      </button>
+
+      <div class="nav-section-label" id="section-account">Account</div>
+      <button type="button" class="nav-item w-full text-left" data-target="history" onclick="navigate('history')" aria-label="View Assessment History">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        History
+      </button>
+      <button type="button" class="nav-item w-full text-left" data-target="settings" onclick="navigate('settings')" aria-label="Account Settings">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Settings
+      </button>
+    </nav>
+
+    <div id="sidebar-footer">
+      <button type="button" id="user-card" class="w-full text-left border-none" onclick="navigate('settings')" aria-label="Open User Profile and Settings">
+        <div id="user-avatar" aria-hidden="true">AU</div>
+        <div id="user-info">
+          <div class="user-name" id="sidebar-username">Alex Rivera</div>
+          <div class="user-role" id="sidebar-role">Skill Explorer</div>
+        </div>
+      </button>
+      <!-- XP & Streak -->
+      <div style="display:flex; gap:6px; padding:8px 12px 2px; font-size:0.75rem; font-weight:600;" aria-label="Streak and Experience Points">
+        <div style="display:flex; align-items:center; gap:4px; color:#fbbf24;">
+          <span aria-hidden="true">🔥</span><span id="sidebar-streak">3d</span>
+        </div>
+        <div style="color: var(--text-subtle);" aria-hidden="true">·</div>
+        <div style="display:flex; align-items:center; gap:4px; color:#818cf8;">
+          <span aria-hidden="true">⚡</span><span id="sidebar-xp">850 XP</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ======== MAIN WRAPPER ======== -->
+  <div id="main-wrapper">
+    <!-- Top Header -->
+    <header id="top-header" role="banner">
+      <button id="mobile-menu-btn" onclick="openMobileSidebar()" aria-label="Open Navigation Menu">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+
+      <div id="header-search" role="search">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text" placeholder="Search skills, cores, roles..." id="global-search" oninput="handleSearch(this.value)" aria-label="Search skills, cores, and career roles">
+      </div>
+
+      <div id="header-actions">
+        <div class="header-pill" style="color:#fbbf24;" aria-label="Daily Streak">
+          🔥 <span id="nav-streak">3d</span>
+        </div>
+        <div class="header-pill" style="color:#818cf8;" aria-label="Total Earned XP">
+          ⚡ <span id="nav-xp">850 XP</span>
+        </div>
+        <button id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle light and dark color theme">
+          <svg id="theme-sun" class="hidden" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg id="theme-moon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+        <button class="btn-ghost" onclick="navigate('settings')" id="nav-username" style="font-size:0.8125rem;" aria-label="User account settings">Alex Rivera</button>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main id="main-content" role="main" tabindex="-1">
+      <div id="screen-container"></div>
+    </main>
+  </div>
+</div>
+
+<!-- Toast with Accessibility Live Region -->
+<div id="toast" role="status" aria-live="polite" aria-atomic="true">
+  <span id="toast-icon" aria-hidden="true">✨</span>
+  <span id="toast-msg">Notification message</span>
+</div>
+
+<script>
+function openMobileSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+}
+function closeMobileSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+</script>
+<script>
+/**
+ * REadON - Product Requirements Document (PRD) Implementation
+ * Version 1.0 - Full MVP Application Engine
+ * Core Philosophy: "Know your skills. Build your future."
+ */
+
+// ==========================================
+// 1. DOMAIN & CATALOG DATA (7 Cores & Roles)
+// ==========================================
+
+const CORES = [
+  {
+    id: "prog",
+    name: "Programming Fundamentals",
+    badge: "Core #1",
+    icon: "code",
+    color: "purple",
+    accentHex: "#a855f7",
+    desc: "Build the logic behind every application, software system, and script.",
+    intro: "The universal foundations of computational thinking, algorithms, and clean code.",
+    skills: [
+      { id: "prog_vars", name: "Variables, Data Types & Operators", topics: ["Primitives & References", "Type Coercion", "Logical Operators"], desc: "Store, transform, and evaluate values with appropriate data types." },
+      { id: "prog_logic", name: "Conditionals & Loops", topics: ["Branching Logic", "Iteration Patterns", "Loop Optimization"], desc: "Control execution flow, make decisions, and repeat tasks cleanly." },
+      { id: "prog_funcs", name: "Functions & Scope", topics: ["Closures", "Lexical Scoping", "Pure Functions & Call Stack"], desc: "Package logic into reusable, modular units with well-defined boundaries." },
+      { id: "prog_structs", name: "Arrays, Strings & Data Structures", topics: ["Array Methods", "Hash Maps & Sets", "Stacks & Queues"], desc: "Organize collections of data so it is fast to search, insert, and update." },
+      { id: "prog_debug", name: "Debugging & Error Handling", topics: ["Try-Catch & Custom Errors", "Call Stack Traces", "Edge Case Defense"], desc: "Identify root causes of unexpected states and handle failures gracefully." }
+    ]
+  },
+  {
+    id: "front",
+    name: "Frontend Development",
+    badge: "Core #2",
+    icon: "layout",
+    color: "cyan",
+    accentHex: "#06b6d4",
+    desc: "Create responsive, accessible, interactive web interfaces that users love.",
+    intro: "Everything users see and touch in modern web applications.",
+    skills: [
+      { id: "front_html", name: "Semantic HTML & Accessibility", topics: ["ARIA Landmarks", "Document Hierarchy", "Screen Reader Standards"], desc: "Structure web applications with accessible, meaningful markup." },
+      { id: "front_css", name: "CSS Layouts & Responsive Design", topics: ["Flexbox & Grid", "Media Queries & Mobile-First", "CSS Variables"], desc: "Design fluid interfaces that adapt smoothly to every device." },
+      { id: "front_dom", name: "DOM Manipulation & Event Loop", topics: ["Event Delegation", "Debounce & Throttle", "Browser Lifecycle"], desc: "Handle user input, keyboard navigation, and dynamic rendering performantly." },
+      { id: "front_react", name: "React Components, Props & State", topics: ["Hook Lifecycle", "State Management", "Component Composition"], desc: "Build modular user interfaces from stateful, declarative components." },
+      { id: "front_async", name: "API Integration & Async JavaScript", topics: ["Promises & Async/Await", "Fetch API", "Optimistic Updates & Errors"], desc: "Communicate with backend servers smoothly without freezing the UI." }
+    ]
+  },
+  {
+    id: "back",
+    name: "Backend Development",
+    badge: "Core #3",
+    icon: "server",
+    color: "emerald",
+    accentHex: "#10b981",
+    desc: "Architect scalable server-side systems, RESTful APIs, and business services.",
+    intro: "The services, security pipelines, and logic that run behind every request.",
+    skills: [
+      { id: "back_rest", name: "HTTP & REST API Design", topics: ["Idempotency", "Status Codes & Headers", "Resource URI Design"], desc: "Engineer standardized endpoints following REST principles." },
+      { id: "back_routing", name: "Routing & Request Handling", topics: ["Middleware Pipelines", "Payload Parsing", "CORS & Headers"], desc: "Direct incoming traffic through validation and handler pipelines." },
+      { id: "back_auth", name: "Authentication & Authorization", topics: ["JWT & Sessions", "OAuth2 & Tokens", "RBAC Permissions"], desc: "Safeguard endpoints and govern user permissions securely." },
+      { id: "back_val", name: "Input Validation & Error Responses", topics: ["Schema Validation", "Sanitization", "Standardized RFC7807 Errors"], desc: "Reject malicious payloads and return clear, actionable error structures." },
+      { id: "back_test", name: "Automated API Testing", topics: ["Unit Tests", "Integration Testing", "Mocking & Fixtures"], desc: "Verify endpoint contracts and business logic deterministically." }
+    ]
+  },
+  {
+    id: "db",
+    name: "Databases & SQL",
+    badge: "Core #4",
+    icon: "database",
+    color: "amber",
+    accentHex: "#f59e0b",
+    desc: "Model, query, index, and safeguard relational and non-relational data.",
+    intro: "How data is structured, retrieved, aggregated, and kept trustworthy.",
+    skills: [
+      { id: "db_rel", name: "Tables, Keys & Relationships", topics: ["Primary & Foreign Keys", "1:N and M:N Models", "Normalization (3NF)"], desc: "Design relational schemas that prevent redundancy and maintain integrity." },
+      { id: "db_crud", name: "CRUD Operations", topics: ["INSERT & Batch", "SELECT with Predicates", "Safe UPDATE & DELETE"], desc: "Perform database mutations and retrievals with accuracy." },
+      { id: "db_filter", name: "Filtering, Sorting & Aggregation", topics: ["GROUP BY & HAVING", "Window Functions", "Aggregate Functions"], desc: "Slice, group, and calculate statistical summaries across datasets." },
+      { id: "db_joins", name: "Joins & Subqueries", topics: ["INNER vs LEFT JOIN", "Correlated Subqueries", "CTE Common Table Exp."], desc: "Assemble complex queries joining normalized tables efficiently." },
+      { id: "db_tx", name: "Transactions & Data Integrity", topics: ["ACID Properties", "Deadlocks & Isolation Levels", "Foreign Key Cascades"], desc: "Guarantee consistency even across unexpected system crashes." }
+    ]
+  },
+  {
+    id: "ai",
+    name: "Data Analytics & AI",
+    badge: "Core #5",
+    icon: "brain",
+    color: "pink",
+    accentHex: "#ec4899",
+    desc: "Extract actionable intelligence, train models, and integrate LLM applications.",
+    intro: "From raw datasets to machine learning models, visualization, and generative AI.",
+    skills: [
+      { id: "ai_clean", name: "Data Cleaning & Preprocessing", topics: ["Missing Values", "Outliers", "Feature Encoding"], desc: "Transform noisy raw data into validated, structured datasets." },
+      { id: "ai_viz", name: "Exploratory Analysis & Visualization", topics: ["Distribution Plots", "Correlation Matrices", "Dashboarding"], desc: "Discover hidden patterns and communicate trends visually." },
+      { id: "ai_stats", name: "Statistics & Interpretation", topics: ["Hypothesis Testing", "p-values & Confidence Intervals", "Sampling Bias"], desc: "Formulate mathematically sound inferences from sample data." },
+      { id: "ai_ml", name: "Machine Learning & Evaluation", topics: ["Precision, Recall & F1", "Cross-Validation", "Supervised Classifiers"], desc: "Train predictive models and evaluate generalizability." },
+      { id: "ai_llm", name: "LLM Applications & Prompt Evaluation", topics: ["Few-Shot Prompting", "RAG Architecture", "Hallucination & Guardrails"], desc: "Build robust software powered by large language models." }
+    ]
+  },
+  {
+    id: "cloud",
+    name: "Cloud & DevOps",
+    badge: "Core #6",
+    icon: "cloud",
+    color: "sky",
+    accentHex: "#0284c7",
+    desc: "Deploy, containerize, automate, and monitor production infrastructure.",
+    intro: "Getting software live, automated, scalable, and resilient in cloud environments.",
+    skills: [
+      { id: "cloud_linux", name: "Linux Command Line & Shell", topics: ["File Permissions & chmod", "Pipes, Grep & Awk", "Process Monitoring"], desc: "Operate high-performance headless servers and system daemons." },
+      { id: "cloud_net", name: "Networking & DNS", topics: ["TCP/IP & Ports", "DNS Records (A, CNAME)", "Reverse Proxies & TLS"], desc: "Direct network traffic securely between clients and distributed nodes." },
+      { id: "cloud_deploy", name: "Cloud Deployment & Infrastructure", topics: ["Virtual Machines", "Object Storage & S3", "IAM Security Roles"], desc: "Provision and configure cloud compute and storage resources." },
+      { id: "cloud_docker", name: "Containers & Docker", topics: ["Dockerfile Multi-Stage", "Port Forwarding", "Docker Compose"], desc: "Package applications with dependencies to run consistently anywhere." },
+      { id: "cloud_cicd", name: "CI/CD & Monitoring", topics: ["GitHub Actions Pipelines", "Healthchecks & Metrics", "Alerting & Logs"], desc: "Automate test-and-deploy pipelines with real-time observability." }
+    ]
+  },
+  {
+    id: "sec",
+    name: "Cybersecurity",
+    badge: "Core #7",
+    icon: "shield",
+    color: "orange",
+    accentHex: "#f97316",
+    desc: "Identify threats, defend application surfaces, and enforce zero trust.",
+    intro: "Spotting risks, protecting critical systems, and preventing data breaches.",
+    skills: [
+      { id: "sec_threat", name: "Threat Recognition & OWASP Top 10", topics: ["Injection & XSS", "CSRF & Broken Auth", "Threat Modeling"], desc: "Identify common vectors and vulnerability patterns in systems." },
+      { id: "sec_iam", name: "Identity & Least Privilege", topics: ["Role Boundaries", "MFA Enforcement", "Principle of Least Privilege"], desc: "Ensure humans and services receive only essential permissions." },
+      { id: "sec_web", name: "Web Application Security", topics: ["CSP Headers", "CORS Whitelisting", "Input Sanitization"], desc: "Harden browser and API boundaries against exploits." },
+      { id: "sec_logs", name: "Log Analysis & Incident Triage", topics: ["Audit Log Parsing", "Anomaly Detection", "Incident Runbooks"], desc: "Detect unauthorized breaches from server and access logs." },
+      { id: "sec_secrets", name: "Secrets & Secure Configuration", topics: ["Environment Variables", "Key Rotation", "Secret Managers"], desc: "Prevent credentials and private certificates from leaking." }
+    ]
+  }
+];
+
+// Helper to look up any skill by ID
+function getSkillById(id) {
+  for (const c of CORES) {
+    const s = c.skills.find(x => x.id === id);
+    if (s) return { ...s, core: c };
+  }
+  return null;
+}
+
+// ==========================================
+// 2. CAREER ROLES & MAPPINGS (PRD Section 8)
+// ==========================================
+
+const CAREER_ROLES = [
+  {
+    id: "fe_dev",
+    name: "Frontend Developer",
+    status: "MVP Priority",
+    isMvp: true,
+    tagline: "Build responsive, accessible, interactive web applications.",
+    desc: "Specializes in turning design wireframes into high-performance web experiences with React, semantic HTML, modern CSS, and async API integration.",
+    skills: [
+      { skillId: "prog_vars", name: "Programming Fundamentals", weight: 0.25, minProficiency: 60, mandatory: true },
+      { skillId: "front_react", name: "Frontend Development (React & State)", weight: 0.45, minProficiency: 70, mandatory: true },
+      { skillId: "front_async", name: "API Integration & Async JS", weight: 0.15, minProficiency: 65, mandatory: false },
+      { skillId: "prog_debug", name: "Debugging & Error Handling", weight: 0.15, minProficiency: 55, mandatory: false }
+    ],
+    salary: "$75,000 - $115,000",
+    hiringDemand: "Very High"
+  },
+  {
+    id: "be_dev",
+    name: "Backend Developer",
+    status: "MVP Priority",
+    isMvp: true,
+    tagline: "Architect dependable APIs, databases, and microservices.",
+    desc: "Specializes in server-side logic, RESTful architecture, relational database schemas, query optimization, and resilient authentication.",
+    skills: [
+      { skillId: "prog_funcs", name: "Programming Fundamentals (Logic & Data)", weight: 0.25, minProficiency: 65, mandatory: true },
+      { skillId: "back_rest", name: "Backend Development (REST & Auth)", weight: 0.35, minProficiency: 70, mandatory: true },
+      { skillId: "db_rel", name: "Databases & SQL (CRUD & Joins)", weight: 0.25, minProficiency: 65, mandatory: true },
+      { skillId: "back_test", name: "Automated API Testing", weight: 0.15, minProficiency: 60, mandatory: false }
+    ],
+    salary: "$85,000 - $125,000",
+    hiringDemand: "High"
+  },
+  {
+    id: "fs_dev",
+    name: "Full-Stack Developer",
+    status: "MVP Priority",
+    isMvp: true,
+    tagline: "End-to-end engineering from frontend UI to database tables.",
+    desc: "Versatile developer who builds responsive user interfaces, connects them to robust backend microservices, and models efficient database schemas.",
+    skills: [
+      { skillId: "prog_vars", name: "Programming Fundamentals", weight: 0.20, minProficiency: 65, mandatory: true },
+      { skillId: "front_react", name: "Frontend Development", weight: 0.30, minProficiency: 65, mandatory: true },
+      { skillId: "back_rest", name: "Backend Development", weight: 0.30, minProficiency: 65, mandatory: true },
+      { skillId: "db_rel", name: "Databases & SQL", weight: 0.20, minProficiency: 60, mandatory: true }
+    ],
+    salary: "$90,000 - $135,000",
+    hiringDemand: "Very High"
+  },
+  {
+    id: "py_dev",
+    name: "Python Developer",
+    status: "Roadmap",
+    isMvp: false,
+    tagline: "Data processing, backend automation, and algorithmic scripting.",
+    desc: "Leverages Python for data pipelines, scripting, automation, and backend development.",
+    skills: [
+      { skillId: "prog_structs", name: "Programming Fundamentals", weight: 0.40, minProficiency: 70, mandatory: true },
+      { skillId: "back_rest", name: "Backend Services", weight: 0.35, minProficiency: 60, mandatory: true },
+      { skillId: "db_crud", name: "Databases & SQL", weight: 0.25, minProficiency: 60, mandatory: false }
+    ],
+    salary: "$80,000 - $120,000",
+    hiringDemand: "Steady"
+  },
+  {
+    id: "da_dev",
+    name: "Data Analyst",
+    status: "Roadmap",
+    isMvp: false,
+    tagline: "Translate complex business numbers into visual insights.",
+    desc: "Extracts data using advanced SQL, cleans messy records, and visualizes trends for stakeholders.",
+    skills: [
+      { skillId: "db_filter", name: "Databases & SQL Aggregations", weight: 0.50, minProficiency: 75, mandatory: true },
+      { skillId: "ai_viz", name: "Exploratory Data Analysis", weight: 0.35, minProficiency: 65, mandatory: true },
+      { skillId: "ai_stats", name: "Statistical Reasoning", weight: 0.15, minProficiency: 55, mandatory: false }
+    ],
+    salary: "$70,000 - $105,000",
+    hiringDemand: "High"
+  },
+  {
+    id: "ai_dev",
+    name: "AI Application Developer",
+    status: "Roadmap",
+    isMvp: false,
+    tagline: "Build next-generation applications powered by LLMs and RAG.",
+    desc: "Integrates frontier LLMs, handles vector embeddings, manages prompts, and prevents hallucinations.",
+    skills: [
+      { skillId: "ai_llm", name: "LLM Applications & Prompting", weight: 0.40, minProficiency: 75, mandatory: true },
+      { skillId: "back_rest", name: "Backend API Pipelines", weight: 0.35, minProficiency: 65, mandatory: true },
+      { skillId: "db_rel", name: "Relational & Vector Data", weight: 0.25, minProficiency: 60, mandatory: false }
+    ],
+    salary: "$95,000 - $150,000",
+    hiringDemand: "Surging"
+  }
+];
+
+// ==========================================
+// 3. TARGETED LEARNING RESOURCES (PRD §11)
+// ==========================================
+
+const LEARNING_RESOURCES = [
+  {
+    id: "lr_1",
+    skillId: "front_react",
+    title: "Mastering React Component State & Side Effects",
+    type: "Interactive Guide",
+    duration: "12 min",
+    difficulty: "Intermediate",
+    summary: "Deep dive into useState, useEffect cleanup routines, and state lifting patterns to prevent re-render loops.",
+    content: "When state changes in React, the component re-executes. Learn how lifting state up and using proper dependency arrays in useEffect prevents infinite fetches and synchronization bugs."
+  },
+  {
+    id: "lr_2",
+    skillId: "back_rest",
+    title: "Designing Predictable & Idempotent REST APIs",
+    type: "Architecture Document",
+    duration: "15 min",
+    difficulty: "Intermediate",
+    summary: "Understanding safe HTTP methods (GET, HEAD), idempotency in PUT and DELETE, and standardized RFC 7807 problem details.",
+    content: "An idempotent HTTP method can be executed multiple times with identical results on the server. POST is generally non-idempotent, whereas PUT replaces the target entity entirely."
+  },
+  {
+    id: "lr_3",
+    skillId: "db_rel",
+    title: "Relational Modeling, Foreign Keys & Cascading",
+    type: "Code Walkthrough",
+    duration: "10 min",
+    difficulty: "Foundational",
+    summary: "How 1-to-many and many-to-many relationship tables prevent duplicate data and guarantee referential integrity.",
+    content: "Foreign key constraints stop orphaned records from polluting your database. When designing join tables for many-to-many relations, use composite primary keys or unique index pairs."
+  },
+  {
+    id: "lr_4",
+    skillId: "prog_vars",
+    title: "Deep Equality vs Reference Equality in JavaScript",
+    type: "Coding Exercise",
+    duration: "8 min",
+    difficulty: "Foundational",
+    summary: "Why `[] === []` is false, how object pointers behave in memory, and techniques for immutability.",
+    content: "Primitives are compared by value; objects, arrays, and functions are compared by memory reference pointer. Creating a new copy ensures clean state flow in modern frameworks."
+  },
+  {
+    id: "lr_5",
+    skillId: "prog_debug",
+    title: "Defensive Coding & Root Cause Call Stack Tracing",
+    type: "Interactive Walkthrough",
+    duration: "14 min",
+    difficulty: "Intermediate",
+    summary: "Systematic techniques to trace unhandled promise rejections and boundary bugs without console.log spamming.",
+    content: "Learn how error boundaries and central try-catch middleware catch uncaught exceptions, capture telemetry, and return human-readable error messages."
+  },
+  {
+    id: "lr_6",
+    skillId: "ai_llm",
+    title: "Prompt Engineering Guardrails & Structured JSON Output",
+    type: "Practical Guide",
+    duration: "16 min",
+    difficulty: "Advanced",
+    summary: "Techniques for constraining LLMs with schema enforcement, few-shot examples, and preventing hallucinated output.",
+    content: "Using Pydantic or JSON Schema alongside system prompts forces language models into deterministic serialization formats, making AI output safe for production pipelines."
+  }
+];
+
+// ==========================================
+// 4. ASSESSMENT CHALLENGES & TEST HARNESS
+// ==========================================
+
+// Curated Hands-on Practical Tasks for all 7 Cores (NO MCQs!)
+const CORE_PRACTICAL_TASKS = {
+  prog: {
+    coreId: "prog",
+    coreName: "Programming Fundamentals",
+    title: "Data Payload Sanitizer & Type Normalizer",
+    scenario: "Incoming user registration payloads arrive with messy formatting, leading whitespace, and type inconsistencies. Implement the normalization pipeline.",
+    instructions: [
+      "Return: { valid: boolean, sanitized: object | null, errors: string[] }",
+      "Field 'name' must be a trimmed string of at least 2 characters.",
+      "Field 'age' must be an integer between 18 and 120. If invalid or missing, add 'Invalid age' to errors.",
+      "Field 'email' must contain '@' and '.' and be returned in lowercase."
+    ],
+    starterCode: `function sanitizeUserPayload(user) {
+  const errors = [];
+  
+  if (!user || typeof user.name !== 'string' || user.name.trim().length < 2) {
+    errors.push('Invalid name');
+  }
+  
+  const age = Number(user.age);
+  if (!Number.isInteger(age) || age < 18 || age > 120) {
+    errors.push('Invalid age');
+  }
+  
+  if (!user.email || !user.email.includes('@') || !user.email.includes('.')) {
+    errors.push('Invalid email');
+  }
+
+  if (errors.length > 0) {
+    return { valid: false, sanitized: null, errors };
+  }
+  
+  return {
+    valid: true,
+    sanitized: {
+      name: user.name.trim(),
+      age: age,
+      email: user.email.trim().toLowerCase()
+    },
+    errors: []
+  };
+}`,
+    tests: [
+      {
+        name: "Normalizes valid profile correctly",
+        input: { name: "  alice dev  ", age: 24, email: "Alice@Example.COM" },
+        expectedCheck: (res) => res && res.valid === true && res.sanitized && res.sanitized.email === "alice@example.com"
+      },
+      {
+        name: "Rejects underage candidate",
+        input: { name: "Bob", age: 16, email: "bob@test.com" },
+        expectedCheck: (res) => res && res.valid === false && res.errors.length > 0
+      },
+      {
+        name: "Rejects malformed email",
+        input: { name: "Charlie", age: 30, email: "invalid-email" },
+        expectedCheck: (res) => res && res.valid === false
+      }
+    ],
+    alignedRole: "Software Developer",
+    learningModules: [
+      "Type coercion edge cases in JavaScript",
+      "Defensive parameter checking and null safety",
+      "High performance string parsing & regex"
+    ]
+  },
+
+  front: {
+    coreId: "front",
+    coreName: "Frontend Development",
+    title: "Reactive Search Filter & Pagination Reducer",
+    scenario: "You are building a high-performance searchable table for a SaaS dashboard. Implement a pagination and search query reducer that calculates pages and item slices without mutating state.",
+    instructions: [
+      "Accepts: (items, pageSize, pageNumber, searchQuery)",
+      "Filters items case-insensitively where item.name contains searchQuery.",
+      "Calculates totalPages = Math.max(1, Math.ceil(filtered.length / pageSize)).",
+      "Clamps pageNumber between 1 and totalPages.",
+      "Returns: { totalPages: number, pageItems: any[], currentPage: number }"
+    ],
+    starterCode: `function paginateItems(items, pageSize, pageNumber, searchQuery) {
+  let filtered = items || [];
+  if (searchQuery && typeof searchQuery === 'string' && searchQuery.trim() !== '') {
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(it => it && it.name && it.name.toLowerCase().includes(q));
+  }
+  
+  const totalPages = Math.max(1, Math.ceil(filtered.length / (pageSize || 10)));
+  const page = Math.min(Math.max(1, pageNumber || 1), totalPages);
+  
+  const start = (page - 1) * pageSize;
+  const pageItems = filtered.slice(start, start + pageSize);
+  
+  return {
+    totalPages,
+    pageItems,
+    currentPage: page
+  };
+}`,
+    tests: [
+      {
+        name: "Paginates 4 items into 2 per page",
+        input: [
+          [{ id: 1, name: "React" }, { id: 2, name: "Vue" }, { id: 3, name: "Angular" }, { id: 4, name: "Svelte" }],
+          2, 1, ""
+        ],
+        expectedCheck: (res) => res && res.totalPages === 2 && res.currentPage === 1 && res.pageItems.length === 2
+      },
+      {
+        name: "Filters items with search query 'el'",
+        input: [
+          [{ id: 1, name: "React" }, { id: 2, name: "Vue" }, { id: 3, name: "Angular" }, { id: 4, name: "Svelte" }],
+          10, 1, "el"
+        ],
+        expectedCheck: (res) => res && res.pageItems.length === 1 && res.pageItems[0].name === "Svelte"
+      }
+    ],
+    alignedRole: "Frontend Developer",
+    learningModules: [
+      "React state synchronization & useEffect cleanup",
+      "Virtual DOM diffing & memory optimization",
+      "CSS Grid & fluid responsive layout strategies"
+    ]
+  },
+
+  back: {
+    coreId: "back",
+    coreName: "Backend Development",
+    title: "REST API Endpoint & Auth Header Guard",
+    scenario: "Build an API route request validator that inspects incoming HTTP request headers for Bearer tokens, enforces authorization roles, and returns standardized status codes.",
+    instructions: [
+      "Accepts: req = { headers: { authorization: 'Bearer token' }, method: 'POST', body: object }",
+      "If authorization header missing or not Bearer: return { status: 401, error: 'Unauthorized' }",
+      "If valid token, process body and return { status: 201, data: req.body, timestamp: number }"
+    ],
+    starterCode: `function handleCreateTask(req) {
+  const auth = req && req.headers ? req.headers.authorization : null;
+  if (!auth || !auth.startsWith('Bearer ')) {
+    return { status: 401, error: 'Unauthorized' };
+  }
+  
+  if (!req.body || !req.body.title) {
+    return { status: 400, error: 'Title required' };
+  }
+
+  return {
+    status: 201,
+    data: req.body,
+    timestamp: Date.now()
+  };
+}`,
+    tests: [
+      {
+        name: "Rejects unauthenticated request with 401",
+        input: { headers: {}, body: { title: "Deploy Server" } },
+        expectedCheck: (res) => res && res.status === 401
+      },
+      {
+        name: "Accepts authorized request with status 201 Created",
+        input: { headers: { authorization: "Bearer sq_valid_token_123" }, body: { title: "Build Docker image" } },
+        expectedCheck: (res) => res && res.status === 201 && res.data && res.data.title === "Build Docker image"
+      }
+    ],
+    alignedRole: "Backend Developer",
+    learningModules: [
+      "REST idempotency & RFC 7807 problem details",
+      "JWT verification & RBAC authorization pipelines",
+      "Automated integration testing with Mock HTTP fixtures"
+    ]
+  },
+
+  db: {
+    coreId: "db",
+    coreName: "Databases & SQL",
+    title: "Relational Join & Revenue Aggregator",
+    scenario: "Write an algorithmic SQL-style relational query engine that joins customers with their orders and calculates total lifetime spend per customer.",
+    instructions: [
+      "Accepts: (customers, orders)",
+      "Each order has { customerId: number, amount: number }",
+      "Groups orders by customerId, sums the amounts, and returns an array of { id, name, totalSpent }",
+      "Customers with zero orders should have totalSpent: 0"
+    ],
+    starterCode: `function aggregateCustomerSpend(customers, orders) {
+  const spendMap = {};
+  for (const ord of (orders || [])) {
+    spendMap[ord.customerId] = (spendMap[ord.customerId] || 0) + ord.amount;
+  }
+  
+  return (customers || []).map(cust => ({
+    id: cust.id,
+    name: cust.name,
+    totalSpent: spendMap[cust.id] || 0
+  }));
+}`,
+    tests: [
+      {
+        name: "Calculates total spend across joined orders",
+        input: [
+          [{ id: 1, name: "Acme Corp" }, { id: 2, name: "Globex" }],
+          [{ customerId: 1, amount: 500 }, { customerId: 1, amount: 250 }, { customerId: 2, amount: 100 }]
+        ],
+        expectedCheck: (res) => Array.isArray(res) && res.length === 2 && res[0].totalSpent === 750 && res[1].totalSpent === 100
+      }
+    ],
+    alignedRole: "Backend Developer",
+    learningModules: [
+      "SQL Indexing strategies (B-Trees vs Hash indexes)",
+      "Multi-table joins (INNER, LEFT, FULL OUTER) and execution plans",
+      "ACID isolation levels and deadlock prevention"
+    ]
+  },
+
+  ai: {
+    coreId: "ai",
+    coreName: "Data Analytics & AI",
+    title: "Dataset Outlier Detection & Z-Score Normalizer",
+    scenario: "Data ingested from IoT sensors contains severe anomalies and spikes. Build a data preprocessing filter that calculates mean, standard deviation, and filters out outliers beyond 2 standard deviations.",
+    instructions: [
+      "Accepts: values (array of numbers)",
+      "Computes mean and sample standard deviation.",
+      "Filters out values where Math.abs(val - mean) > 2 * stdDev.",
+      "Returns: { cleanedValues: number[], outliersCount: number, mean: number }"
+    ],
+    starterCode: `function cleanDataOutliers(values) {
+  if (!values || values.length === 0) return { cleanedValues: [], outliersCount: 0, mean: 0 };
+  
+  const sum = values.reduce((a, b) => a + b, 0);
+  const mean = sum / values.length;
+  
+  const variance = values.reduce((acc, v) => acc + Math.pow(v - mean, 2), 0) / values.length;
+  const stdDev = Math.sqrt(variance);
+  
+  const threshold = 2 * stdDev;
+  const cleaned = [];
+  let outliers = 0;
+  
+  for (const v of values) {
+    if (stdDev === 0 || Math.abs(v - mean) <= threshold) {
+      cleaned.push(v);
+    } else {
+      outliers++;
+    }
+  }
+  
+  return {
+    cleanedValues: cleaned,
+    outliersCount: outliers,
+    mean: Number(mean.toFixed(2))
+  };
+}`,
+    tests: [
+      {
+        name: "Detects outlier spike in dataset",
+        input: [10, 11, 12, 10, 11, 100, 12, 10],
+        expectedCheck: (res) => res && res.outliersCount === 1
+      }
+    ],
+    alignedRole: "Data Analyst",
+    learningModules: [
+      "Statistical inference, p-values and confidence intervals",
+      "Feature engineering and vectorization for ML models",
+      "LLM prompt evaluations and output guardrails"
+    ]
+  },
+
+  cloud: {
+    coreId: "cloud",
+    coreName: "Cloud & DevOps",
+    title: "Container Health Status & Dependency Resolver",
+    scenario: "In microservices orchestration, containers must boot in correct topological order based on their dependencies. Implement a service dependency validator.",
+    instructions: [
+      "Accepts: services = [{ name: string, dependsOn: string[] }]",
+      "Validates that all dependsOn references exist in the services list.",
+      "Returns: { valid: boolean, errors: string[] }"
+    ],
+    starterCode: `function validateServiceDependencies(services) {
+  const serviceNames = new Set((services || []).map(s => s.name));
+  const errors = [];
+  
+  for (const s of (services || [])) {
+    if (s.dependsOn && Array.isArray(s.dependsOn)) {
+      for (const dep of s.dependsOn) {
+        if (!serviceNames.has(dep)) {
+          errors.push("Service " + s.name + " depends on missing service " + dep);
+        }
+      }
+    }
+  }
+  
+  return {
+    valid: errors.length === 0,
+    errors
+  };
+}`,
+    tests: [
+      {
+        name: "Validates consistent service graph",
+        input: [
+          { name: "api", dependsOn: ["database", "redis"] },
+          { name: "database", dependsOn: [] },
+          { name: "redis", dependsOn: [] }
+        ],
+        expectedCheck: (res) => res && res.valid === true
+      },
+      {
+        name: "Catches missing dependency",
+        input: [
+          { name: "web", dependsOn: ["auth-service"] }
+        ],
+        expectedCheck: (res) => res && res.valid === false && res.errors.length > 0
+      }
+    ],
+    alignedRole: "Full-Stack Developer",
+    learningModules: [
+      "Multi-stage Dockerfile builds and image caching",
+      "CI/CD deployment pipelines and automated rollbacks",
+      "Network routing, reverse proxies, and TLS termination"
+    ]
+  },
+
+  sec: {
+    coreId: "sec",
+    coreName: "Cybersecurity",
+    title: "OWASP Header & Token Expiry Scanner",
+    scenario: "Inspect server HTTP responses to ensure critical OWASP security headers (Content-Security-Policy, X-Frame-Options) are enforced, and verify that authentication tokens are not expired.",
+    instructions: [
+      "Accepts: (headers, tokenPayload)",
+      "Checks that 'content-security-policy' and 'x-frame-options' exist in headers (case-insensitive).",
+      "Checks that tokenPayload.exp * 1000 > Date.now().",
+      "Returns: { secure: boolean, missingHeaders: string[], tokenExpired: boolean }"
+    ],
+    starterCode: `function auditSecurityHeaders(headers, tokenPayload) {
+  const lowerHeaders = {};
+  for (const k in (headers || {})) {
+    lowerHeaders[k.toLowerCase()] = headers[k];
+  }
+  
+  const required = ['content-security-policy', 'x-frame-options'];
+  const missing = [];
+  
+  for (const r of required) {
+    if (!lowerHeaders[r]) {
+      missing.push(r);
+    }
+  }
+  
+  const now = Date.now();
+  const tokenExpired = tokenPayload && tokenPayload.exp ? (tokenPayload.exp * 1000 <= now) : true;
+  
+  return {
+    secure: missing.length === 0 && !tokenExpired,
+    missingHeaders: missing,
+    tokenExpired
+  };
+}`,
+    tests: [
+      {
+        name: "Passes secure headers with valid token",
+        input: [
+          { 'Content-Security-Policy': "default-src 'self'", 'X-Frame-Options': 'DENY' },
+          { exp: Math.floor((Date.now() + 60000) / 1000) }
+        ],
+        expectedCheck: (res) => res && res.secure === true && res.tokenExpired === false
+      },
+      {
+        name: "Detects missing CSP header",
+        input: [
+          { 'X-Frame-Options': 'DENY' },
+          { exp: Math.floor((Date.now() + 60000) / 1000) }
+        ],
+        expectedCheck: (res) => res && res.secure === false && res.missingHeaders.includes('content-security-policy')
+      }
+    ],
+    alignedRole: "Full-Stack Developer",
+    learningModules: [
+      "OWASP Top 10 vulnerabilities (Injection, Broken Auth, XSS)",
+      "Principle of Least Privilege and Role-Based Access Control",
+      "Secrets rotation and secure environment configuration"
+    ]
+  }
+};
+
+const KNOWLEDGE_QUESTIONS = [
+  {
+    id: "kq_1",
+    skillId: "prog_vars",
+    title: "JavaScript Reference vs Primitive Equality",
+    question: "What is the evaluated output of the following JavaScript expression?\n\nconst a = [1, 2];\nconst b = [1, 2];\nconsole.log(a == b, a === b);",
+    options: [
+      { text: "true true", isCorrect: false, explanation: "Arrays are reference types stored at distinct memory addresses, so equality checks compare memory references, not contents." },
+      { text: "false false", isCorrect: true, explanation: "Correct! In JavaScript, two distinct array objects have different memory addresses, so both loose (==) and strict (===) equality return false." },
+      { text: "true false", isCorrect: false, explanation: "Loose equality (==) does not deep-compare object contents without explicit coercion rules." },
+      { text: "TypeError", isCorrect: false, explanation: "Comparing two array variables with == or === is completely valid syntax and returns a boolean." }
+    ]
+  },
+  {
+    id: "kq_2",
+    skillId: "front_react",
+    title: "React useEffect Dependency Management",
+    question: "Why should you avoid omitting state variables used inside a useEffect dependency array?",
+    options: [
+      { text: "It causes an immediate syntax error at compile time", isCorrect: false, explanation: "Linters will warn you (eslint-plugin-react-hooks), but it compiles without a syntax error." },
+      { text: "The effect closure will capture stale state values across renders", isCorrect: true, explanation: "Correct! If a dependency is omitted, the effect function captures the variable's value from the initial render, causing subtle stale-closure bugs." },
+      { text: "React will automatically unmount the component immediately", isCorrect: false, explanation: "React will continue rendering the component, but the side effect will operate with outdated values." },
+      { text: "It doubles memory consumption of the browser tab", isCorrect: false, explanation: "Omitted dependencies do not allocate double memory; the issue is data staleness and synchronization." }
+    ]
+  },
+  {
+    id: "kq_3",
+    skillId: "back_rest",
+    title: "HTTP Idempotency Principles",
+    question: "Which of the following HTTP methods is expected to be idempotent according to RFC 9110 specifications?",
+    options: [
+      { text: "POST", isCorrect: false, explanation: "POST creates new subordinate resources upon each invocation, meaning repeated calls typically result in duplicate records." },
+      { text: "PUT", isCorrect: true, explanation: "Correct! PUT replaces or creates the target resource with the given state. Calling PUT 10 times with the same body leaves the server in the identical state as calling it once." },
+      { text: "PATCH", isCorrect: false, explanation: "PATCH modifies partial state (e.g. appending to an array), which is not guaranteed to be idempotent unless specifically engineered." },
+      { text: "CONNECT", isCorrect: false, explanation: "CONNECT establishes a bidirectional tunnel, not an idempotent state mutation." }
+    ]
+  },
+  {
+    id: "kq_4",
+    skillId: "db_rel",
+    title: "SQL Aggregate Filtering with HAVING",
+    question: "When writing a SQL query, what is the fundamental difference between WHERE and HAVING clauses?",
+    options: [
+      { text: "WHERE filters rows before aggregation; HAVING filters groups after aggregation", isCorrect: true, explanation: "Correct! WHERE evaluates individual row predicates before GROUP BY is computed; HAVING evaluates conditions on aggregated summary values (e.g., COUNT(*) > 5)." },
+      { text: "WHERE is for MySQL only; HAVING is for PostgreSQL only", isCorrect: false, explanation: "Both clauses are standard ANSI SQL supported by every major relational database engine." },
+      { text: "HAVING can only be used with primary key integers", isCorrect: false, explanation: "HAVING can evaluate any aggregate function or grouped column expression." },
+      { text: "There is no semantic difference; they are interchangeable aliases", isCorrect: false, explanation: "Attempting to use aggregate functions in a WHERE clause throws a syntax error." }
+    ]
+  }
+];
+
+// Practical Coding Tasks with Automated In-Browser Sandbox & Test Cases
+const PRACTICAL_TASKS = [
+  {
+    id: "pt_1",
+    skillId: "prog_vars",
+    title: "Input Validation & Data Sanitizer",
+    core: "prog",
+    scenario: "Write a function `sanitizeUserPayload(user)` that validates and normalizes an incoming user profile.",
+    instructions: [
+      "Return an object: `{ valid: boolean, sanitized: object | null, errors: string[] }`",
+      "Field `name` must be a trimmed string with length >= 2. If valid, title-case it.",
+      "Field `age` must be an integer >= 18 and <= 120. If invalid or missing, add error 'Invalid age'.",
+      "Field `email` must contain '@' and '.' and be returned in lowercase."
+    ],
+    starterCode: `function sanitizeUserPayload(user) {
+  const errors = [];
+  
+  // TODO: Validate user.name (string, trimmed length >= 2)
+  
+  // TODO: Validate user.age (integer between 18 and 120)
+  
+  // TODO: Validate user.email (must contain @ and ., lowercased)
+
+  if (errors.length > 0) {
+    return { valid: false, sanitized: null, errors };
+  }
+  
+  return {
+    valid: true,
+    sanitized: {
+      name: user.name.trim(),
+      age: Number(user.age),
+      email: user.email.trim().toLowerCase()
+    },
+    errors: []
+  };
+}`,
+    tests: [
+      {
+        name: "Valid user object",
+        input: { name: "  alice dev  ", age: 24, email: "Alice@Example.COM" },
+        expectedCheck: (res) => res && res.valid === true && res.sanitized && res.sanitized.email === "alice@example.com" && res.sanitized.age === 24
+      },
+      {
+        name: "Rejects underage user",
+        input: { name: "Bob", age: 16, email: "bob@test.com" },
+        expectedCheck: (res) => res && res.valid === false && res.errors.length > 0
+      },
+      {
+        name: "Rejects malformed email",
+        input: { name: "Charlie", age: 30, email: "invalid-email" },
+        expectedCheck: (res) => res && res.valid === false
+      }
+    ]
+  },
+  {
+    id: "pt_2",
+    skillId: "front_react",
+    title: "State Pagination & Filter Reducer",
+    core: "front",
+    scenario: "Implement an algorithmic helper `paginateItems(items, pageSize, pageNumber, searchQuery)` for a reactive table.",
+    instructions: [
+      "Filters `items` where `item.name` case-insensitively contains `searchQuery` (if provided).",
+      "Returns `{ totalPages: number, pageItems: any[], currentPage: number }`",
+      "Pages are 1-indexed (page 1 starts at index 0). If page exceeds totalPages, clamp to totalPages."
+    ],
+    starterCode: `function paginateItems(items, pageSize, pageNumber, searchQuery) {
+  let filtered = items;
+  if (searchQuery && searchQuery.trim() !== '') {
+    const q = searchQuery.toLowerCase();
+    filtered = items.filter(it => it.name.toLowerCase().includes(q));
+  }
+  
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const page = Math.min(Math.max(1, pageNumber), totalPages);
+  
+  const start = (page - 1) * pageSize;
+  const pageItems = filtered.slice(start, start + pageSize);
+  
+  return {
+    totalPages,
+    pageItems,
+    currentPage: page
+  };
+}`,
+    tests: [
+      {
+        name: "Paginate 5 items with pageSize 2 (Page 1)",
+        input: [
+          [{id: 1, name: "Alpha"}, {id: 2, name: "Beta"}, {id: 3, name: "Gamma"}, {id: 4, name: "Delta"}, {id: 5, name: "Epsilon"}],
+          2, 1, ""
+        ],
+        expectedCheck: (res) => res.totalPages === 3 && res.pageItems.length === 2 && res.pageItems[0].name === "Alpha"
+      },
+      {
+        name: "Filter with search query 'et'",
+        input: [
+          [{id: 1, name: "Alpha"}, {id: 2, name: "Beta"}, {id: 3, name: "Gamma"}],
+          10, 1, "et"
+        ],
+        expectedCheck: (res) => res.pageItems.length === 1 && res.pageItems[0].name === "Beta"
+      }
+    ]
+  }
+];
+
+// Gamified Challenges (PRD §10)
+const GAMIFIED_CHALLENGES = [
+  {
+    id: "game_bug_hunter",
+    title: "Bug Hunter: The Off-By-One Tax Glitch",
+    core: "prog",
+    coreName: "Programming Fundamentals",
+    badge: "Gamified Challenge",
+    icon: "bug",
+    timeLimit: 180,
+    scenario: "An e-commerce customer reported that the checkout cart calculates tax on all items EXCEPT the last one in the cart. Fix the bug in the loop below!",
+    buggyCode: `function calculateCartTax(cartItems, taxRate) {
+  let subtotal = 0;
+  // BUG: Inspect this loop condition carefully!
+  for (let i = 0; i < cartItems.length - 1; i++) {
+    subtotal += cartItems[i].price * cartItems[i].qty;
+  }
+  const tax = Number((subtotal * taxRate).toFixed(2));
+  return { subtotal, tax, total: subtotal + tax };
+}`,
+    hint: "Notice the loop terminating condition `i < cartItems.length - 1`. What happens to the final item in the array?",
+    tests: [
+      {
+        name: "Cart with 3 distinct items",
+        input: [[{ price: 10, qty: 1 }, { price: 20, qty: 2 }, { price: 15, qty: 1 }], 0.10],
+        expectedCheck: (res) => res.subtotal === 65 && res.tax === 6.5 && res.total === 71.5
+      }
+    ]
+  },
+  {
+    id: "game_restore_service",
+    title: "Restore the Service: Broken 500 Endpoint",
+    core: "back",
+    coreName: "Backend Development",
+    badge: "Gamified Challenge",
+    icon: "server",
+    timeLimit: 240,
+    scenario: "The production API is crashing with status 500 when saving user preferences. The database client call is asynchronous, but the handler returned before the promise resolved!",
+    buggyCode: `async function handleCreatePreference(db, req) {
+  // BUG: What is missing before db.savePreference?
+  // And what HTTP status should a new creation return?
+  const saved = db.savePreference(req.body);
+  
+  return {
+    status: 200, // Should be 201 Created for new resources
+    body: { success: true, data: saved }
+  };
+}`,
+    hint: "Remember to use `await` before asynchronous database calls, and use status code `201` for newly created entities.",
+    tests: [
+      {
+        name: "Async DB persistence and HTTP 201",
+        runMock: async (fn) => {
+          const fakeDb = {
+            savePreference: async (b) => ({ id: "pref_99", ...b, timestamp: Date.now() })
+          };
+          const res = await fn(fakeDb, { body: { theme: "dark" } });
+          return res.status === 201 && res.body.data && res.body.data.id === "pref_99";
+        }
+      }
+    ]
+  },
+  {
+    id: "game_sql_detective",
+    title: "SQL Detective: Catch Duplicate Registrations",
+    core: "db",
+    coreName: "Databases & SQL",
+    badge: "Gamified Challenge",
+    icon: "database",
+    timeLimit: 200,
+    scenario: "Fraudulent users are signing up multiple times using the same phone number with different emails. Formulate the logic to detect duplicated accounts.",
+    buggyCode: `function detectDuplicateAccounts(accounts) {
+  // Group accounts by phone number and return phone numbers that appear > 1 time
+  const phoneCounts = {};
+  const duplicates = [];
+  
+  for (const acc of accounts) {
+    phoneCounts[acc.phone] = (phoneCounts[acc.phone] || 0) + 1;
+  }
+  
+  for (const phone in phoneCounts) {
+    if (phoneCounts[phone] > 1) {
+      duplicates.push(phone);
+    }
+  }
+  return duplicates.sort();
+}`,
+    hint: "This mirrors a SQL query: `SELECT phone FROM users GROUP BY phone HAVING COUNT(*) > 1`.",
+    tests: [
+      {
+        name: "Detect multiple phone entries",
+        input: [
+          [
+            { id: 1, phone: "555-0199", email: "a@x.com" },
+            { id: 2, phone: "555-0123", email: "b@x.com" },
+            { id: 3, phone: "555-0199", email: "c@x.com" },
+            { id: 4, phone: "555-0999", email: "d@x.com" }
+          ]
+        ],
+        expectedCheck: (res) => Array.isArray(res) && res.length === 1 && res[0] === "555-0199"
+      }
+    ]
+  }
+];
+
+// ==========================================
+// 5. APPLICATION STATE MANAGEMENT & STORAGE
+// ==========================================
+
+const STORAGE_KEY = "readon_app_state_v1";
+
+const DEFAULT_STATE = {
+  theme: "dark",
+  user: {
+    name: "Alex Rivera",
+    email: "alex.rivera@example.com",
+    experienceLevel: "College Student / Fresher",
+    targetRoleId: "fs_dev", // Full-Stack Dev default
+    preferredLanguage: "JavaScript / TypeScript"
+  },
+  gamification: {
+    xp: 850,
+    streak: 3,
+    level: 2,
+    badges: ["First Assessment", "Bug Hunter Initiate", "Full-Stack Explorer"]
+  },
+  // Skill Proficiencies (P = 0.30K + 0.50A + 0.20R)
+  skillProficiencies: {
+    prog_vars: { k: 80, a: 75, r: 70, p: 76, confidence: "Medium", attempts: 2, lastAssessed: "2026-11-12" },
+    prog_logic: { k: 70, a: 80, r: 65, p: 74, confidence: "Medium", attempts: 2, lastAssessed: "2026-11-13" },
+    front_react: { k: 65, a: 60, r: 70, p: 64, confidence: "Low", attempts: 1, lastAssessed: "2026-11-13" },
+    back_rest: { k: 75, a: 70, r: 65, p: 71, confidence: "Medium", attempts: 2, lastAssessed: "2026-11-14" },
+    db_rel: { k: 50, a: 45, r: 50, p: 48, confidence: "Low", attempts: 1, lastAssessed: "2026-11-10" }
+  },
+  // Learning completion is stored STRICTLY SEPARATE from skill proficiency! (PRD §6.7 & §11)
+  learningProgress: {
+    lr_1: { completed: true, completedAt: "2026-11-13" },
+    lr_4: { completed: true, completedAt: "2026-11-12" }
+  },
+  // Assessment History attempts
+  history: [
+    {
+      id: "att_101",
+      date: "14 Nov 2026, 09:30 AM",
+      skillId: "back_rest",
+      skillName: "HTTP & REST API Design",
+      type: "Knowledge Assessment",
+      k: 80, a: 70, r: 65,
+      p: 72,
+      passed: true,
+      feedback: "Demonstrated sound understanding of HTTP status codes and idempotency. Focus next on RFC 7807 problem details."
+    },
+    {
+      id: "att_102",
+      date: "13 Nov 2026, 04:15 PM",
+      skillId: "front_react",
+      skillName: "React Components & State",
+      type: "Practical Code Sandbox",
+      k: 65, a: 60, r: 70,
+      p: 64,
+      passed: true,
+      feedback: "Basic pagination logic is functional. Work on optimizing dependency arrays in complex hooks."
+    }
+  ],
+  aiSettings: {
+    apiKey: "",
+    model: "google/gemini-2.0-flash-lite:free",
+    fallbackModel: "nvidia/llama-3.1-nemotron-70b-instruct",
+    enableAI: true
+  }
+};
+
+let appState = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return DEFAULT_STATE;
+    const parsed = JSON.parse(raw);
+    return { ...DEFAULT_STATE, ...parsed };
+  } catch (e) {
+    console.warn("Could not load stored state, using default:", e);
+    return DEFAULT_STATE;
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+  } catch (e) {
+    console.error("Storage error:", e);
+  }
+  updateNavHeader();
+}
+
+// ==========================================
+// 6. SCORING FORMULAS & ALIGNMENT ENGINES
+// ==========================================
+
+/**
+ * Calculates Skill Proficiency: P = 0.30K + 0.50A + 0.20R
+ * PRD Section 12.1
+ */
+function calculateSkillProficiency(kScore, aScore, rScore) {
+  const k = Math.min(100, Math.max(0, kScore || 0));
+  const a = Math.min(100, Math.max(0, aScore || 0));
+  const r = Math.min(100, Math.max(0, rScore || 0));
+  const p = Math.round((0.30 * k) + (0.50 * a) + (0.20 * r));
+  return { k, a, r, p };
+}
+
+/**
+ * Calculates Confidence Rating
+ * PRD Section 12.2 (reflects amount, variety, consistency of evidence)
+ */
+function calculateConfidence(attempts, hasPractical, scoreP) {
+  if (!attempts || attempts <= 0) return "Not Assessed";
+  if (attempts === 1) return "Low (Preliminary)";
+  if (attempts === 2) return "Medium";
+  if (attempts >= 3 && hasPractical && scoreP >= 80) return "Verified Mastery";
+  return "High";
+}
+
+/**
+ * Calculates Role Alignment & Identifies Mandatory Skill Gaps
+ * PRD Section 12.3 & 12.4
+ */
+function calculateRoleAlignment(roleId) {
+  const role = CAREER_ROLES.find(r => r.id === roleId) || CAREER_ROLES[0];
+  let weightedScoreSum = 0;
+  let totalWeight = 0;
+  const skillBreakdown = [];
+  const mandatoryGaps = [];
+
+  for (const req of role.skills) {
+    const userProf = appState.skillProficiencies[req.skillId];
+    const score = userProf ? userProf.p : 0;
+    const confidence = userProf ? userProf.confidence : "None";
+    
+    weightedScoreSum += score * req.weight;
+    totalWeight += req.weight;
+
+    const isDeficit = score < req.minProficiency;
+    if (req.mandatory && isDeficit) {
+      mandatoryGaps.push({
+        skillId: req.skillId,
+        name: req.name,
+        current: score,
+        required: req.minProficiency,
+        deficit: req.minProficiency - score
+      });
+    }
+
+    skillBreakdown.push({
+      ...req,
+      currentScore: score,
+      confidence,
+      isDeficit,
+      deficit: Math.max(0, req.minProficiency - score)
+    });
+  }
+
+  const alignmentPercentage = totalWeight > 0 ? Math.round(weightedScoreSum / totalWeight) : 0;
+
+  return {
+    role,
+    alignmentPercentage,
+    skillBreakdown,
+    mandatoryGaps,
+    hasCriticalDeficit: mandatoryGaps.length > 0
+  };
+}
+
+// ==========================================
+// 7. OPENROUTER AI INTEGRATION (PRD §15)
+// ==========================================
+
+async function callOpenRouterAI(prompt, systemInstruction = "You are the REadON AI Skill Evaluator. Provide structured, constructive feedback.") {
+  const { apiKey, model, fallbackModel, enableAI } = appState.aiSettings;
+  if (!enableAI || !apiKey) {
+    return null;
+  }
+
+  async function requestModel(targetModel) {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey.trim()}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://readon.skillquest.local",
+        "X-Title": "REadON Skill Platform"
+      },
+      body: JSON.stringify({
+        model: targetModel,
+        messages: [
+          { role: "system", content: systemInstruction },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.3,
+        max_tokens: 600
+      })
+    });
+
+    if (!response.ok) return null;
+    const data = await response.json();
+    return data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : null;
+  }
+
+  try {
+    // 1. Try Primary Model (e.g. Gemini 2.0 Flash)
+    const primaryResult = await requestModel(model || "google/gemini-2.0-flash-lite:free");
+    if (primaryResult) return primaryResult;
+
+    // 2. Failover to NVIDIA Nemotron if primary fails
+    const nemotronModel = fallbackModel || "nvidia/llama-3.1-nemotron-70b-instruct";
+    console.log(`[OpenRouter Failover] Primary model unavailable. Calling NVIDIA Nemotron (${nemotronModel})...`);
+    const fallbackResult = await requestModel(nemotronModel);
+    if (fallbackResult) {
+      console.log(`[OpenRouter Failover] NVIDIA Nemotron evaluation succeeded!`);
+      return fallbackResult;
+    }
+
+    return null;
+  } catch (err) {
+    console.warn("OpenRouter call failed gracefully (using deterministic fallback):", err);
+    return null;
+  }
+}
+
+// ==========================================
+// 8. SCREEN NAVIGATION & ROUTING
+// ==========================================
+
+let currentScreen = "dashboard";
+let activeAssessmentContext = null;
+
+function navigate(screenName, context = null) {
+  currentScreen = screenName;
+  activeAssessmentContext = context;
+
+  // Update sidebar nav active state
+  document.querySelectorAll(".nav-item").forEach(item => {
+    if (item.getAttribute("data-target") === screenName) {
+      item.classList.add("active");
+    } else {
+      item.classList.remove("active");
+    }
+  });
+
+  // Also update legacy tab-btn if any exist
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    if (btn.getAttribute("data-target") === screenName) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+  });
+
+  // Close mobile sidebar on navigate
+  document.getElementById('sidebar')?.classList.remove('open');
+  document.getElementById('sidebar-overlay')?.classList.remove('open');
+
+  const container = document.getElementById("screen-container");
+  container.innerHTML = "";
+
+  switch (screenName) {
+    case "dashboard":
+      renderDashboard(container);
+      break;
+    case "cores":
+      renderExploreCores(container);
+      break;
+    case "roles":
+      renderCareerRoles(container);
+      break;
+    case "assessment":
+      renderAssessmentCenter(container, context);
+      break;
+    case "results":
+      renderAssessmentResults(container, context);
+      break;
+    case "skills":
+      renderMySkills(container);
+      break;
+    case "learning":
+      renderLearningHub(container);
+      break;
+    case "roadmap":
+      renderCareerRoadmap(container);
+      break;
+    case "aichat":
+      renderAIChat(container);
+      break;
+    case "history":
+      renderHistory(container);
+      break;
+    case "settings":
+      renderSettings(container);
+      break;
+    default:
+      renderDashboard(container);
+  }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Toast helper
+function showToast(message, icon = "✨") {
+  const toast = document.getElementById("toast");
+  const msg = document.getElementById("toast-msg");
+  const ico = document.getElementById("toast-icon");
+  if (!toast) return;
+
+  msg.textContent = message;
+  ico.textContent = icon;
+  toast.classList.add("show");
+  toast.classList.remove("translate-y-20", "opacity-0", "pointer-events-none");
+  clearTimeout(window._toastTimeout);
+  window._toastTimeout = setTimeout(() => {
+    toast.classList.remove("show");
+    toast.classList.add("translate-y-20", "opacity-0", "pointer-events-none");
+  }, 3500);
+}
+
+// Update Nav header stats
+function updateNavHeader() {
+  const streakEls = document.querySelectorAll("#nav-streak, #sidebar-streak");
+  const xpEls = document.querySelectorAll("#nav-xp, #sidebar-xp");
+  const userEls = document.querySelectorAll("#nav-username, #sidebar-username");
+  const avatarEl = document.getElementById("user-avatar");
+
+  const initials = appState.user.name.split(" ").map(w => w[0]).join("").slice(0, 2) || "AU";
+
+  streakEls.forEach(el => { if (el) el.textContent = `${appState.gamification.streak}d`; });
+  xpEls.forEach(el => { if (el) el.textContent = `${appState.gamification.xp} XP`; });
+  userEls.forEach(el => { if (el) el.textContent = appState.user.name; });
+  if (avatarEl) avatarEl.textContent = initials;
+
+  const sidebarRole = document.getElementById("sidebar-role");
+  const sidebarUsername = document.getElementById("sidebar-username");
+  if (sidebarUsername) sidebarUsername.textContent = appState.user.name;
+  if (sidebarRole) {
+    const targetRole = CAREER_ROLES.find(r => r.id === appState.user.targetRoleId);
+    sidebarRole.textContent = targetRole ? targetRole.name : "Skill Explorer";
+  }
+}
+
+// Theme Toggle
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
+  const nextTheme = currentTheme === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", nextTheme);
+  appState.theme = nextTheme;
+  saveState();
+  updateThemeIcons();
+}
+
+function updateThemeIcons() {
+  const theme = document.documentElement.getAttribute("data-theme") || "dark";
+  const sun = document.getElementById("theme-sun");
+  const moon = document.getElementById("theme-moon");
+  if (theme === "dark") {
+    sun?.classList.remove("hidden");
+    moon?.classList.add("hidden");
+  } else {
+    sun?.classList.add("hidden");
+    moon?.classList.remove("hidden");
+  }
+}
+
+// ==========================================
+// 9. SCREEN RENDERERS
+// ==========================================
+
+/**
+ * 9.1 DASHBOARD SCREEN (PRD §13)
+ */
+function renderDashboard(container) {
+  const targetRoleId = appState.user.targetRoleId || "fs_dev";
+  const roleAlignment = calculateRoleAlignment(targetRoleId);
+  const targetRole = roleAlignment.role;
+  const assessedSkillsCount = Object.keys(appState.skillProficiencies).length;
+  const verifiedCount = Object.values(appState.skillProficiencies).filter(s => s.confidence === "Verified Mastery" || s.p >= 80).length;
+  const readiness = roleAlignment.alignmentPercentage;
+
+  function ringHtml(pct, size, stroke, color, sub) {
+    const r = (size - stroke) / 2;
+    const circ = +(2 * Math.PI * r).toFixed(2);
+    const offset = +(circ - (pct / 100) * circ).toFixed(2);
+    return `<div class="progress-ring-wrap" style="width:${size}px;height:${size}px;">
+      <svg width="${size}" height="${size}" style="transform:rotate(-90deg)">
+        <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="${stroke}"/>
+        <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}"
+          stroke-dasharray="${circ}" stroke-dashoffset="${offset}" stroke-linecap="round"
+          style="transition:stroke-dashoffset 1s ease"/>
+      </svg>
+      <div class="ring-label"><span class="ring-pct" style="color:${color}">${pct}%</span><span class="ring-sub">${sub}</span></div>
+    </div>`;
+  }
+
+  function tierBadge(p) {
+    if (p >= 85) return '<span class="tier-badge tier-master">Master</span>';
+    if (p >= 70) return '<span class="tier-badge tier-advanced">Advanced</span>';
+    if (p >= 55) return '<span class="tier-badge tier-proficient">Proficient</span>';
+    if (p >= 35) return '<span class="tier-badge tier-developing">Developing</span>';
+    return '<span class="tier-badge tier-foundational">Foundational</span>';
+  }
+
+  container.innerHTML = `
+    <div class="fade-in">
+      <div class="page-header">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+          <div>
+            <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:4px;">Welcome back</div>
+            <h1 style="margin:0 0 4px;">Hello, <span class="gradient-text">${appState.user.name}</span> 👋</h1>
+            <p style="color:var(--text-muted);font-size:0.875rem;margin:0;">Assessment-first skill intelligence · P = 0.30K + 0.50A + 0.20R</p>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            <button onclick="navigate('assessment')" class="btn-primary">🎯 Start Practical Task</button>
+            <button onclick="navigate('roadmap')" class="btn-secondary">🗺️ Roadmap</button>
+          </div>
+        </div>
+      </div>
+
+      ${roleAlignment.hasCriticalDeficit ? `
+      <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:14px 18px;display:flex;align-items:flex-start;gap:12px;margin-bottom:20px;">
+        <span style="font-size:1.2rem;">⚠️</span>
+        <div style="font-size:0.8125rem;">
+          <span style="font-weight:700;color:#fbbf24;">Critical Gap · PRD §12.3: </span>
+          <span style="color:var(--text-muted);">Below mandatory minimum in <strong style="color:var(--text-main);">${roleAlignment.mandatoryGaps.map(g => g.name + ' (' + g.current + '%)').join(', ')}</strong></span>
+          <button onclick="navigate('assessment')" style="display:block;margin-top:6px;font-size:0.75rem;font-weight:700;color:#f59e0b;background:none;border:none;cursor:pointer;padding:0;">Take targeted assessment →</button>
+        </div>
+      </div>` : ''}
+
+      <div class="stats-row">
+        <div class="stat-card fade-in fade-in-delay-1">
+          <div class="stat-label">Role Readiness</div>
+          <div class="stat-value" style="color:#818cf8">${readiness}%</div>
+          <div class="mini-bar"><div class="mini-bar-fill" style="width:${readiness}%;background:#6366f1;"></div></div>
+          <div class="stat-sub">for ${targetRole.name}</div>
+        </div>
+        <div class="stat-card fade-in fade-in-delay-1">
+          <div class="stat-label">Skills Verified</div>
+          <div class="stat-value" style="color:#34d399">${verifiedCount}</div>
+          <div class="mini-bar"><div class="mini-bar-fill" style="width:${(assessedSkillsCount/35)*100}%;background:#10b981;"></div></div>
+          <div class="stat-sub">${assessedSkillsCount} of 35 assessed</div>
+        </div>
+        <div class="stat-card fade-in fade-in-delay-2">
+          <div class="stat-label">Engineering XP</div>
+          <div class="stat-value" style="color:#c084fc">${appState.gamification.xp}</div>
+          <div class="stat-sub">🔥 ${appState.gamification.streak}d streak · Lv${appState.gamification.level}</div>
+        </div>
+        <div class="stat-card fade-in fade-in-delay-2">
+          <div class="stat-label">Modules Studied</div>
+          <div class="stat-value" style="color:#f472b6">${Object.keys(appState.learningProgress).length}</div>
+          <div class="stat-sub">≠ Proficiency (PRD §6.7)</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start;" class="dash-grid">
+        <div>
+          <div class="card" style="padding:24px;margin-bottom:20px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+              <div>
+                <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:3px;">Active Target Role</div>
+                <div style="font-size:1.05rem;font-weight:800;margin:0 0 2px;">${targetRole.name}</div>
+                <div style="font-size:0.775rem;color:var(--text-muted);">${targetRole.tagline}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:14px;">
+                ${ringHtml(readiness, 80, 7, '#6366f1', 'ready')}
+                <button onclick="navigate('roles')" class="btn-ghost" style="font-size:0.75rem;">Change →</button>
+              </div>
+            </div>
+            <div class="section-label">Required Skills Breakdown</div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              ${roleAlignment.skillBreakdown.map(skill => `
+                <div style="background:var(--surface-2);border:1px solid var(--surface-border);border-radius:10px;padding:12px 16px;">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+                    <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+                      <span style="font-weight:700;font-size:0.85rem;">${skill.name}</span>
+                      ${skill.mandatory ? '<span style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);font-size:0.6rem;font-weight:700;padding:2px 6px;border-radius:20px;text-transform:uppercase;">Required</span>' : '<span style="background:var(--surface-border);color:var(--text-muted);font-size:0.6rem;font-weight:600;padding:2px 6px;border-radius:20px;">optional</span>'}
+                      ${tierBadge(skill.currentScore)}
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;font-size:0.72rem;">
+                      <span style="color:var(--text-muted);">W: <strong>${Math.round(skill.weight*100)}%</strong></span>
+                      <span style="color:var(--text-muted);">Min: <strong>${skill.minProficiency}%</strong></span>
+                      <span style="font-weight:800;color:${skill.currentScore >= skill.minProficiency ? '#34d399' : '#fbbf24'}">${skill.currentScore}%</span>
+                    </div>
+                  </div>
+                  <div class="mini-bar" style="height:5px;"><div class="mini-bar-fill" style="width:${skill.currentScore}%;background:${skill.currentScore >= skill.minProficiency ? '#10b981' : '#f59e0b'};height:5px;"></div></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px;font-size:0.68rem;color:var(--text-muted);">
+                    <span>Confidence: <strong style="color:var(--text-main);">${skill.confidence}</strong></span>
+                    <button onclick="navigate('assessment', { skillId: '${skill.skillId}' })" style="color:#818cf8;background:none;border:none;cursor:pointer;font-size:0.68rem;font-weight:700;padding:0;">${skill.currentScore > 0 ? 'Reassess →' : 'Take Baseline →'}</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card" style="padding:18px;border-left:3px solid #6366f1;">
+            <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:#818cf8;margin-bottom:7px;">💡 Recommended Next Step</div>
+            <div style="font-weight:700;font-size:0.875rem;margin-bottom:5px;">Verify Practical Ability</div>
+            <p style="font-size:0.775rem;color:var(--text-muted);line-height:1.5;margin:0 0 10px;">SQL score is below the required 60% for Full-Stack. Take the hands-on challenge to gain evidence.</p>
+            <button onclick="navigate('assessment', { gameId: 'game_sql_detective' })" class="btn-primary" style="width:100%;justify-content:center;font-size:0.775rem;">🔍 SQL Detective (5 min)</button>
+          </div>
+
+          <div class="card" style="padding:18px;">
+            <div class="section-label">Recent Achievements</div>
+            <div style="display:flex;flex-direction:column;gap:7px;">
+              <div class="achievement-badge"><div class="achievement-icon" style="background:rgba(245,158,11,0.15);">🔥</div><div><div style="font-size:0.8rem;font-weight:600;">${appState.gamification.streak}-Day Streak</div><div style="font-size:0.68rem;color:var(--text-muted);">Consistent learner</div></div></div>
+              <div class="achievement-badge"><div class="achievement-icon" style="background:rgba(99,102,241,0.15);">⚡</div><div><div style="font-size:0.8rem;font-weight:600;">${appState.gamification.xp} XP</div><div style="font-size:0.68rem;color:var(--text-muted);">Level ${appState.gamification.level} Engineer</div></div></div>
+              ${verifiedCount > 0 ? '<div class="achievement-badge"><div class="achievement-icon" style="background:rgba(16,185,129,0.15);">✅</div><div><div style="font-size:0.8rem;font-weight:600;">' + verifiedCount + ' Verified</div><div style="font-size:0.68rem;color:var(--text-muted);">Practically proven</div></div></div>' : ''}
+            </div>
+          </div>
+
+          <div class="card" style="padding:18px;">
+            <div class="section-label">🎮 Quick Challenges</div>
+            <div style="display:flex;flex-direction:column;gap:7px;">
+              ${GAMIFIED_CHALLENGES.map(game => `
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:var(--surface-2);border:1px solid var(--surface-border);border-radius:8px;gap:8px;">
+                  <div><div style="font-size:0.78rem;font-weight:600;">${game.title}</div><div style="font-size:0.68rem;color:var(--text-muted);">${Math.floor(game.timeLimit/60)}m</div></div>
+                  <button onclick="navigate('assessment', { gameId: '${game.id}' })" style="background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.3);color:#818cf8;border-radius:6px;padding:4px 9px;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;">Play</button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <style>.dash-grid { } @media(max-width:900px){.dash-grid{grid-template-columns:1fr !important;}}</style>
+  `;
+}
+
+
+function renderExploreCores(container) {
+  container.innerHTML = `
+    <div class="fade-in">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h1>Explore <span class="gradient-text">7 Technical Cores</span></h1>
+            <p>The REadON skill taxonomy. Each core contains 5 standardized skills and curated practical tasks.</p>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="status-pill status-inprogress">7 Cores</span>
+            <span class="status-pill status-notstarted">35 Skills</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <span class="filter-pill active">All Cores</span>
+        <span class="filter-pill">Assessed</span>
+        <span class="filter-pill">Not Started</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;">
+        ${CORES.map(core => {
+          const skillIds = core.skills.map(s => s.id);
+          const assessedInCore = skillIds.map(id => appState.skillProficiencies[id]).filter(Boolean);
+          const coreAvg = assessedInCore.length > 0
+            ? Math.round(assessedInCore.reduce((acc, s) => acc + s.p, 0) / assessedInCore.length) : 0;
+          const task = CORE_PRACTICAL_TASKS[core.id];
+          const r = 24, circ = +(2*Math.PI*r).toFixed(2), offset = +(circ - (coreAvg/100)*circ).toFixed(2);
+
+          return `
+            <div class="pathway-card card-interactive" style="--card-accent:${core.accentHex}" onclick="navigate('assessment', { coreTask: '${core.id}' })">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+                <div class="card-icon" style="background:${core.accentHex}20;">
+                  <svg width="22" height="22" fill="none" stroke="${core.accentHex}" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                  </svg>
+                </div>
+                ${coreAvg > 0 ? `
+                  <div class="progress-ring-wrap" style="width:54px;height:54px;">
+                    <svg width="54" height="54" style="transform:rotate(-90deg)">
+                      <circle cx="27" cy="27" r="${r}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5"/>
+                      <circle cx="27" cy="27" r="${r}" fill="none" stroke="${core.accentHex}" stroke-width="5"
+                        stroke-dasharray="${circ}" stroke-dashoffset="${offset}" stroke-linecap="round" style="transition:1s ease"/>
+                    </svg>
+                    <div class="ring-label"><span class="ring-pct" style="color:${core.accentHex};font-size:0.75rem;">${coreAvg}%</span></div>
+                  </div>
+                ` : ''}
+              </div>
+
+              <div>
+                <span style="background:${core.accentHex}20;color:${core.accentHex};border:1px solid ${core.accentHex}40;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:0.06em;">${core.badge}</span>
+                <div class="card-title" style="margin-top:8px;">${core.name}</div>
+                <div class="card-desc" style="margin-top:4px;">${core.desc}</div>
+              </div>
+
+              <div style="border-top:1px solid var(--surface-border);padding-top:12px;">
+                <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">
+                  ${core.skills.map(skill => {
+                    const prof = appState.skillProficiencies[skill.id];
+                    return `<span style="font-size:0.65rem;font-weight:600;padding:2px 7px;border-radius:12px;background:${prof ? 'rgba(16,185,129,0.15)' : 'var(--surface-border)'};color:${prof ? '#34d399' : 'var(--text-subtle)'};">${skill.name.split(' ')[0]}${prof ? ' ✓' : ''}</span>`;
+                  }).join('')}
+                </div>
+                <button onclick="event.stopPropagation();navigate('assessment', { coreTask: '${core.id}' })" class="btn-primary" style="width:100%;justify-content:center;font-size:0.775rem;">
+                  💻 Take Practical Task →
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+
+function renderCareerRoles(container) {
+  const currentRoleId = appState.user.targetRoleId || "fs_dev";
+  container.innerHTML = `
+    <div class="fade-in">
+      <div class="page-header">
+        <h1>Career <span class="gradient-text">Role Matching</span></h1>
+        <p>Roles are weighted skill mappings. Readiness shows evidence alignment, not probability of employment.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;">
+        ${CAREER_ROLES.map(role => {
+          const alignment = calculateRoleAlignment(role.id);
+          const isCurrent = role.id === currentRoleId;
+          const pct = alignment.alignmentPercentage;
+          const r = 30, circ = +(2*Math.PI*r).toFixed(2), offset = +(circ - (pct/100)*circ).toFixed(2);
+          const demandClass = {
+            'Very High': 'demand-vhigh', 'High': 'demand-high',
+            'Surging': 'demand-surge', 'Steady': 'demand-steady'
+          }[role.hiringDemand] || 'demand-steady';
+
+          return `
+            <div class="role-card ${isCurrent ? 'active-target' : ''}">
+              ${isCurrent ? '<div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#6366f1,#3b82f6);border-radius:16px 16px 0 0;"></div>' : ''}
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+                <div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+                    <span class="${role.isMvp ? 'status-pill status-verified' : 'status-pill status-notstarted'}">${role.status}</span>
+                    ${isCurrent ? '<span class="status-pill status-inprogress">Active Target</span>' : ''}
+                  </div>
+                  <div style="font-size:1.05rem;font-weight:800;margin-bottom:3px;">${role.name}</div>
+                  <div style="font-size:0.775rem;color:#818cf8;font-weight:500;">${role.tagline}</div>
+                </div>
+                <div class="progress-ring-wrap" style="width:70px;height:70px;flex-shrink:0;">
+                  <svg width="70" height="70" style="transform:rotate(-90deg)">
+                    <circle cx="35" cy="35" r="${r}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6"/>
+                    <circle cx="35" cy="35" r="${r}" fill="none" stroke="${pct >= 70 ? '#10b981' : '#6366f1'}" stroke-width="6"
+                      stroke-dasharray="${circ}" stroke-dashoffset="${offset}" stroke-linecap="round" style="transition:1s ease"/>
+                  </svg>
+                  <div class="ring-label">
+                    <span class="ring-pct" style="color:${pct >= 70 ? '#34d399' : '#818cf8'};">${pct}%</span>
+                    <span class="ring-sub">match</span>
+                  </div>
+                </div>
+              </div>
+
+              <p style="font-size:0.78rem;color:var(--text-muted);line-height:1.5;margin:0;">${role.desc}</p>
+
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <span class="demand-badge ${demandClass}">${role.hiringDemand} Demand</span>
+                <span style="font-size:0.72rem;font-weight:600;color:var(--text-muted);">${role.salary}</span>
+                ${alignment.hasCriticalDeficit ? '<span style="font-size:0.68rem;font-weight:700;color:#fbbf24;">⚠️ Gaps</span>' : '<span style="font-size:0.68rem;font-weight:700;color:#34d399;">✓ Requirements met</span>'}
+              </div>
+
+              <div style="border-top:1px solid var(--surface-border);padding-top:12px;">
+                <div class="section-label" style="margin-bottom:8px;">Required Skills</div>
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                  ${role.skills.map(s => {
+                    const prof = appState.skillProficiencies[s.skillId];
+                    const p = prof ? prof.p : 0;
+                    return `<div style="display:flex;align-items:center;gap:8px;">
+                      <div class="mini-bar" style="flex:1;height:4px;"><div class="mini-bar-fill" style="width:${p}%;background:${p >= s.minProficiency ? '#10b981' : '#6366f1'};height:4px;"></div></div>
+                      <span style="font-size:0.68rem;white-space:nowrap;color:var(--text-muted);">${s.name.split(' ')[0]} · ${Math.round(s.weight*100)}%</span>
+                    </div>`;
+                  }).join('')}
+                </div>
+              </div>
+
+              <div style="display:flex;gap:8px;">
+                ${!isCurrent ? `<button onclick="setTargetRole('${role.id}')" class="btn-secondary" style="flex:1;justify-content:center;font-size:0.775rem;">Set as Target</button>` : ''}
+                <button onclick="navigate('roadmap')" class="btn-primary" style="flex:1;justify-content:center;font-size:0.775rem;">${isCurrent ? 'View Roadmap →' : 'View Path'}</button>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+
+function setTargetRole(roleId) {
+  appState.user.targetRoleId = roleId;
+  saveState();
+  showToast(`Target role changed to ${CAREER_ROLES.find(r=>r.id===roleId)?.name}!`, "🎯");
+  navigate("roles");
+}
+
+/**
+ * 9.4 ASSESSMENT CENTER SCREEN (PRD §9, §10, §12)
+ * Core Discovery First: User selects a technical core -> AI delivers a practical hands-on challenge (NO MCQs!)
+ * -> AI diagnoses career role and recommends learning on that core.
+ */
+function renderAssessmentCenter(container, context = {}) {
+  // If specific core practical task was selected
+  if (context && context.coreTask) {
+    const task = CORE_PRACTICAL_TASKS[context.coreTask] || CORE_PRACTICAL_TASKS.prog;
+    return renderCoreTaskRunner(container, task);
+  }
+
+  // Check if a specific challenge or game was requested
+  if (context && context.gameId) {
+    const game = GAMIFIED_CHALLENGES.find(g => g.id === context.gameId);
+    if (game) return renderGamifiedRunner(container, game);
+  }
+
+  if (context && context.taskId) {
+    const task = PRACTICAL_TASKS.find(t => t.id === context.taskId);
+    if (task) return renderCodeSandboxRunner(container, task);
+  }
+
+  // General assessment selector
+  container.innerHTML = `
+    <div class="space-y-8">
+      <!-- Header Banner -->
+      <div class="glass-panel p-6 sm:p-8 border border-blue-500/30 bg-gradient-to-r from-blue-900/20 via-indigo-900/10 to-purple-900/20">
+        <div class="max-w-3xl">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="badge-pill bg-blue-500/20 text-blue-400 border border-blue-500/30 text-xs font-bold uppercase">
+              Practical Task Evaluation • No Generic MCQs
+            </span>
+          </div>
+          <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-2">
+            Choose a Technical Core to Discover Your Skills & Role Match
+          </h1>
+          <p class="text-sm text-gray-300 leading-relaxed">
+            Select a core below. The AI will immediately assign an authentic practical coding challenge (not a quiz).
+            Your code execution, test passes, and architectural reasoning will automatically <strong>identify your best-fit career role</strong> and generate a tailored learning path on that core.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 1: 7 Cores Interactive Grid -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-bold flex items-center gap-2">
+            <span>🎯</span> Step 1: Select Your Technical Core
+          </h2>
+          <span class="text-xs text-gray-400">7 Technical Areas Available</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          ${CORES.map(c => {
+            const task = CORE_PRACTICAL_TASKS[c.id];
+            const prof = appState.skillProficiencies[`${c.id}_vars`] || appState.skillProficiencies[`${c.id}_react`] || appState.skillProficiencies[`${c.id}_rest`];
+
+            return `
+              <div onclick="navigate('assessment', { coreTask: '${c.id}' })" class="glass-panel p-5 cursor-pointer hover:border-blue-500 hover:scale-[1.02] transition flex flex-col justify-between group">
+                <div>
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="badge-pill text-[10px]" style="background: ${c.accentHex}20; color: ${c.accentHex}; border: 1px solid ${c.accentHex}40">
+                      ${c.badge}
+                    </span>
+                    <span class="text-xs text-blue-400 group-hover:translate-x-1 transition font-bold">Launch Task →</span>
+                  </div>
+                  <h3 class="font-bold text-base mb-1 text-gray-100 group-hover:text-blue-400 transition">${c.name}</h3>
+                  <p class="text-xs text-gray-400 line-clamp-2 mb-3">${c.desc}</p>
+                </div>
+
+                <div class="pt-3 border-t text-[11px] flex items-center justify-between text-gray-400" style="border-color: var(--surface-border)">
+                  <span>Practical Task:</span>
+                  <span class="font-semibold text-gray-300 truncate max-w-[140px]">${task ? task.title : 'Live Challenge'}</span>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </div>
+
+      <!-- Alternative Gamified Incident Challenges -->
+      <div class="glass-panel p-6 border border-gray-800">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-base flex items-center gap-2">
+              <span>🎮</span> Gamified Incident Simulations
+            </h3>
+            <p class="text-xs text-gray-400">Solve simulated production outages with time pressure</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          ${GAMIFIED_CHALLENGES.map(game => `
+            <div class="p-4 rounded-xl border flex flex-col justify-between" style="border-color: var(--surface-border); background: var(--bg-subtle)">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="badge-pill bg-amber-500/20 text-amber-400 text-[10px]">Gamified</span>
+                  <span class="text-[11px] text-amber-400 font-mono">${Math.floor(game.timeLimit/60)}m</span>
+                </div>
+                <h4 class="font-bold text-sm mb-1">${game.title}</h4>
+                <p class="text-xs text-gray-400 line-clamp-2 mb-3">${game.scenario}</p>
+              </div>
+              <button onclick="navigate('assessment', { gameId: '${game.id}' })" class="w-full py-2 rounded bg-amber-600/30 hover:bg-amber-600 text-amber-200 hover:text-white font-semibold text-xs border border-amber-500/30 transition">
+                Launch Incident Simulation →
+              </button>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// 9.4.0 CORE PRACTICAL TASK RUNNER (NO MCQs!)
+function renderCoreTaskRunner(container, task) {
+  container.innerHTML = `
+    <div class="space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <button onclick="navigate('assessment')" class="text-xs text-gray-400 hover:text-white flex items-center gap-1 mb-2 font-semibold">
+            ← Back to Core Selection
+          </button>
+          <div class="flex items-center gap-2">
+            <span class="badge-pill bg-blue-500/20 text-blue-400 border border-blue-500/30 text-xs font-bold uppercase">
+              ${task.coreName}
+            </span>
+            <span class="badge-pill bg-purple-500/20 text-purple-400 border border-purple-500/30 text-xs">
+              Role Match Assessment
+            </span>
+          </div>
+          <h1 class="text-xl sm:text-2xl font-extrabold mt-1 flex items-center gap-2">
+            <span>💻</span> Practical Challenge: ${task.title}
+          </h1>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Left: Task Scenario & Automated Tests Status -->
+        <div class="space-y-4">
+          <div class="glass-panel p-5">
+            <h3 class="font-bold text-sm mb-2 text-blue-400">Engineering Context & Mission</h3>
+            <p class="text-xs text-gray-300 leading-relaxed mb-4">${task.scenario}</p>
+
+            <h3 class="font-bold text-sm mb-2 text-blue-400">Technical Requirements</h3>
+            <ul class="text-xs text-gray-300 space-y-2 list-disc list-inside mb-4">
+              ${task.instructions.map(ins => `<li>${ins}</li>`).join("")}
+            </ul>
+
+            <div class="p-3 rounded-lg bg-black/40 border border-gray-800 text-[11px] text-gray-400 flex items-center gap-2">
+              <span>🤖</span>
+              <span><strong>AI Role Diagnosis:</strong> Submitting will evaluate your algorithmic correctness, identify your best-fit career role, and recommend focused learning.</span>
+            </div>
+          </div>
+
+          <!-- Automated Test Assertions -->
+          <div class="glass-panel p-5">
+            <h3 class="font-bold text-sm mb-3 flex items-center justify-between">
+              <span>Automated Unit Assertions (${task.tests.length})</span>
+              <span class="text-xs text-gray-400 font-normal">Executed in Sandbox</span>
+            </h3>
+            <div id="core-test-results-box" class="space-y-2">
+              ${task.tests.map(t => `
+                <div class="p-2.5 rounded-lg border flex items-center justify-between text-xs" style="border-color: var(--surface-border); background: var(--bg-subtle)">
+                  <span class="text-gray-300">${t.name}</span>
+                  <span class="badge-pill bg-gray-700 text-gray-400 text-[10px]">Awaiting Execution</span>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: In-Browser Code Sandbox Editor -->
+        <div class="space-y-4">
+          <div class="glass-panel p-4 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono text-gray-400">solution.js (JavaScript ES6)</span>
+              <button onclick="document.getElementById('core-code-input').value = CORE_PRACTICAL_TASKS['${task.coreId}'].starterCode; showToast('Code reset to starter template');" class="text-xs text-gray-400 hover:text-white">
+                Reset Code
+              </button>
+            </div>
+
+            <textarea id="core-code-input" class="code-editor-area w-full p-4 h-96 focus:outline-none focus:ring-1 focus:ring-blue-500" spellcheck="false">${task.starterCode}</textarea>
+
+            <div class="flex items-center justify-between mt-4">
+              <div id="core-exec-status" class="text-xs text-gray-400">Click below to run assertions & trigger AI role identification</div>
+              <button id="btn-submit-core" onclick="submitCoreTask('${task.coreId}')" class="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-2 transition shadow-lg shadow-blue-600/30">
+                <span>▶ Run Tests & Identify Role</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function submitCoreTask(coreId) {
+  const task = CORE_PRACTICAL_TASKS[coreId];
+  if (!task) return;
+
+  const code = document.getElementById("core-code-input").value;
+  const statusEl = document.getElementById("core-exec-status");
+  const testBox = document.getElementById("core-test-results-box");
+  const submitBtn = document.getElementById("btn-submit-core");
+
+  statusEl.innerHTML = `<span class="text-blue-400 font-semibold animate-pulse">Running unit assertions in sandbox...</span>`;
+  submitBtn.disabled = true;
+
+  let passedCount = 0;
+  const results = [];
+
+  try {
+    // Dynamically detect declared function name from code
+    const matchFn = code.match(/function\s+([a-zA-Z0-9_$]+)/);
+    const fnName = matchFn ? matchFn[1] : null;
+
+    const userFn = new Function('input', `
+      ${code}
+      if ("${fnName}" && typeof ${fnName} === 'function') {
+        return Array.isArray(input) ? ${fnName}(...input) : ${fnName}(input);
+      }
+      if (typeof sanitizeUserPayload === 'function') return sanitizeUserPayload(input);
+      if (typeof paginateItems === 'function') return paginateItems(...input);
+      if (typeof handleCreateTask === 'function') return handleCreateTask(input);
+      if (typeof aggregateCustomerSpend === 'function') return aggregateCustomerSpend(...input);
+      if (typeof cleanDataOutliers === 'function') return cleanDataOutliers(input);
+      if (typeof validateServiceDependencies === 'function') return validateServiceDependencies(input);
+      if (typeof auditSecurityHeaders === 'function') return auditSecurityHeaders(...input);
+      return null;
+    `);
+
+    for (const test of task.tests) {
+      let isPass = false;
+      let errMsg = "";
+      try {
+        const output = userFn(test.input);
+        isPass = test.expectedCheck ? test.expectedCheck(output) : (output !== null && output !== undefined);
+      } catch (e) {
+        errMsg = e.message;
+      }
+      if (isPass) passedCount++;
+      results.push({ name: test.name, isPass, errMsg });
+    }
+  } catch (compileErr) {
+    statusEl.innerHTML = `<span class="text-red-400 font-bold">Compilation Error: ${compileErr.message}</span>`;
+    submitBtn.disabled = false;
+    return;
+  }
+
+  // Update Test status box
+  testBox.innerHTML = results.map(r => `
+    <div class="p-2.5 rounded-lg border flex items-center justify-between text-xs" style="border-color: ${r.isPass ? '#10b981' : '#ef4444'}; background: ${r.isPass ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}">
+      <span class="text-gray-200 font-medium">${r.name}</span>
+      <span class="badge-pill ${r.isPass ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'} text-[10px]">
+        ${r.isPass ? 'Passed ✓' : 'Failed ✗'}
+      </span>
+    </div>
+  `).join("");
+
+  const aScore = Math.round((passedCount / task.tests.length) * 100);
+  const kScore = aScore > 0 ? 85 : 45;
+  const rScore = passedCount === task.tests.length ? 90 : 65;
+  const { p } = calculateSkillProficiency(kScore, aScore, rScore);
+
+  statusEl.innerHTML = `<span class="text-purple-400 font-semibold animate-pulse">OpenRouter AI diagnosing career role & core learning roadmap...</span>`;
+
+  // AI Prompt to identify role and core learning path
+  const prompt = `As the REadON Career Advisor, evaluate this student's practical test performance:
+Core: ${task.coreName}
+Task: ${task.title}
+Automated Tests Passed: ${passedCount}/${task.tests.length} (Demonstrated Score: ${p}%)
+
+Code:
+\`\`\`javascript
+${code}
+\`\`\`
+
+Diagnose:
+1) Which Career Role (Frontend Developer, Backend Developer, Full-Stack Developer, Data Analyst, Python Developer, AI App Developer) best fits their demonstrated abilities?
+2) Why this role fits?
+3) What 2 specific skill gaps in ${task.coreName} must they study next?
+4) Give a tailored 2-item learning roadmap for this core.
+Keep it structured, concise, and inspiring.`;
+
+  let aiDiagnosis = await callOpenRouterAI(prompt);
+
+  if (!aiDiagnosis) {
+    // Deterministic fallback
+    aiDiagnosis = `🎯 Recommended Career Role: ${task.alignedRole} (${Math.max(65, p)}% Alignment Match)
+    
+• Demonstrated Practical Strengths:
+Your code exhibits strong functional organization and cleanly passes ${passedCount}/${task.tests.length} automated unit tests. Your approach shows natural alignment with ${task.alignedRole} patterns.
+
+• Diagnosed Core Skill Gaps (${task.coreName}):
+1. Defensive boundary verification for missing or nullish attributes.
+2. Robust error response payloads following standardized conventions.
+
+• Recommended Core Learning Roadmap:
+1. ${task.learningModules[0]} (High Priority - Core competency)
+2. ${task.learningModules[1]} (Medium Priority - Production readiness)`;
+  }
+
+  // Update App State
+  const primarySkill = `${coreId}_vars`;
+  const prevAttempts = (appState.skillProficiencies[primarySkill]?.attempts || 0) + 1;
+  const conf = calculateConfidence(prevAttempts, true, p);
+
+  appState.skillProficiencies[primarySkill] = {
+    k: kScore,
+    a: aScore,
+    r: rScore,
+    p: p,
+    confidence: conf,
+    attempts: prevAttempts,
+    lastAssessed: new Date().toISOString().split("T")[0]
+  };
+
+  // Add to History
+  appState.history.unshift({
+    id: `att_core_${Date.now()}`,
+    date: new Date().toLocaleDateString("en-US", { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+    skillId: primarySkill,
+    skillName: `${task.coreName} Practical`,
+    type: "Practical Core Task",
+    k: kScore,
+    a: aScore,
+    r: rScore,
+    p: p,
+    passed: passedCount === task.tests.length,
+    feedback: aiDiagnosis
+  });
+
+  appState.gamification.xp += 250;
+  saveState();
+  showToast("Practical Task Evaluated! +250 XP earned", "🎯");
+
+  // Render Role Identification & Core Learning Report
+  renderRoleDiagnosticReport(container, {
+    task,
+    passedCount,
+    totalTests: task.tests.length,
+    pScore: p,
+    kScore,
+    aScore,
+    rScore,
+    aiDiagnosis,
+    alignedRole: task.alignedRole,
+    learningModules: task.learningModules
+  });
+}
+
+// 9.4.0.1 ROLE IDENTIFICATION & CORE LEARNING RECOMMENDATION REPORT
+function renderRoleDiagnosticReport(container, result) {
+  const { task, passedCount, totalTests, pScore, kScore, aScore, rScore, aiDiagnosis, alignedRole, learningModules } = result;
+
+  container.innerHTML = `
+    <div class="max-w-4xl mx-auto space-y-6">
+      <!-- Success Header -->
+      <div class="glass-panel p-6 sm:p-8 border border-emerald-500/30 bg-gradient-to-r from-emerald-900/20 via-blue-900/20 to-purple-900/20">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="badge-pill bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold uppercase">
+            ✓ Practical Task Evaluated (${passedCount}/${totalTests} Tests Passed)
+          </span>
+          <span class="badge-pill bg-blue-500/20 text-blue-400 border border-blue-500/30 text-xs">
+            ${task.coreName}
+          </span>
+        </div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-2">
+          Career Role Diagnosis & Core Learning Recommendations
+        </h1>
+        <p class="text-sm text-gray-300 leading-relaxed">
+          Based on your actual code execution, algorithmic structure, and practical evidence, REadON has identified your best-fit career role and prepared a focused learning plan on <strong>${task.coreName}</strong>.
+        </p>
+      </div>
+
+      <!-- Top Identified Role Card -->
+      <div class="glass-panel p-6 sm:p-8 border-l-4 border-l-blue-500">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-blue-400 mb-1">Identified Best-Fit Career Role</div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white">${alignedRole}</h2>
+          </div>
+          <div class="flex items-baseline gap-2 bg-blue-500/10 px-4 py-2 rounded-xl border border-blue-500/20">
+            <span class="text-3xl font-black text-blue-400">${Math.max(65, pScore)}%</span>
+            <span class="text-xs text-blue-300 font-semibold">Role Alignment Match</span>
+          </div>
+        </div>
+
+        <!-- Component Scores -->
+        <div class="grid grid-cols-3 gap-3 max-w-md mb-6">
+          <div class="p-2.5 rounded-lg bg-black/40 border border-gray-800 text-center">
+            <div class="text-[10px] text-gray-400 font-semibold">Knowledge (K)</div>
+            <div class="text-lg font-bold text-purple-400">${kScore}%</div>
+          </div>
+          <div class="p-2.5 rounded-lg bg-black/40 border border-gray-800 text-center">
+            <div class="text-[10px] text-gray-400 font-semibold">Applied (A)</div>
+            <div class="text-lg font-bold text-cyan-400">${aScore}%</div>
+          </div>
+          <div class="p-2.5 rounded-lg bg-black/40 border border-gray-800 text-center">
+            <div class="text-[10px] text-gray-400 font-semibold">Reasoning (R)</div>
+            <div class="text-lg font-bold text-amber-400">${rScore}%</div>
+          </div>
+        </div>
+
+        <button onclick="setTargetRoleFromReport('${alignedRole}')" class="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition flex items-center gap-2 shadow-lg shadow-blue-600/30">
+          <span>🎯</span> Adopt ${alignedRole} as Target Role in Dashboard
+        </button>
+      </div>
+
+      <!-- AI Evaluation Feedback -->
+      <div class="glass-panel p-6">
+        <h3 class="font-bold text-base mb-3 flex items-center gap-2 text-purple-400">
+          <span>🤖</span> AI Architectural Evaluation & Diagnosis
+        </h3>
+        <div class="text-xs sm:text-sm text-gray-300 leading-relaxed whitespace-pre-line bg-black/30 p-4 rounded-xl border border-gray-800 font-mono">
+          ${aiDiagnosis}
+        </div>
+      </div>
+
+      <!-- Recommended Core Learning Roadmap -->
+      <div class="glass-panel p-6 border border-pink-500/20">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-base flex items-center gap-2 text-pink-400">
+              <span>📚</span> Recommended Learning Modules for ${task.coreName}
+            </h3>
+            <p class="text-xs text-gray-400">Study these modules to eliminate identified skill gaps and reach 90%+ readiness</p>
+          </div>
+          <span class="badge-pill bg-pink-500/20 text-pink-400 border border-pink-500/30 text-xs">
+            Core Learning Path
+          </span>
+        </div>
+
+        <div class="space-y-3">
+          ${learningModules.map((mod, i) => `
+            <div class="p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3" style="border-color: var(--surface-border); background: var(--bg-subtle)">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-pink-500/20 text-pink-400 font-bold text-xs flex items-center justify-center shrink-0">
+                  ${i + 1}
+                </span>
+                <div>
+                  <div class="font-bold text-sm text-gray-200">${mod}</div>
+                  <div class="text-[11px] text-gray-400">Target Core: ${task.coreName} • Recommended by AI</div>
+                </div>
+              </div>
+              <button onclick="navigate('learning')" class="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold text-xs border border-gray-700 transition self-start sm:self-auto">
+                Study in Learning Hub →
+              </button>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-between pt-2">
+        <button onclick="navigate('assessment')" class="px-5 py-2.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold text-xs transition">
+          ← Try Another Core Task
+        </button>
+        <button onclick="navigate('dashboard')" class="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-lg">
+          Go to Updated Dashboard →
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function setTargetRoleFromReport(roleName) {
+  const matched = CAREER_ROLES.find(r => r.name.toLowerCase().includes(roleName.toLowerCase().split(' ')[0]));
+  if (matched) {
+    appState.user.targetRoleId = matched.id;
+    saveState();
+    showToast(`Adopted ${matched.name} as your target role!`, "🎯");
+  }
+}
+
+let currentQuizIndex = 0;
+let userQuizAnswers = {};
+
+function startKnowledgeQuiz() {
+  currentQuizIndex = 0;
+  userQuizAnswers = {};
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  const container = document.getElementById("screen-container");
+  const q = KNOWLEDGE_QUESTIONS[currentQuizIndex];
+  const total = KNOWLEDGE_QUESTIONS.length;
+  const selected = userQuizAnswers[currentQuizIndex];
+
+  container.innerHTML = `
+    <div class="max-w-2xl mx-auto space-y-6">
+      <div class="flex items-center justify-between text-xs text-gray-400">
+        <button onclick="navigate('assessment')" class="hover:text-white flex items-center gap-1 font-semibold">
+          ← Exit Assessment
+        </button>
+        <span>Question ${currentQuizIndex + 1} of ${total}</span>
+      </div>
+
+      <div class="w-full bg-gray-700/50 h-2 rounded-full overflow-hidden">
+        <div class="bg-purple-500 h-full rounded-full transition-all" style="width: ${((currentQuizIndex + 1)/total)*100}%"></div>
+      </div>
+
+      <div class="glass-panel p-6 sm:p-8">
+        <div class="badge-pill bg-purple-500/20 text-purple-400 border border-purple-500/30 text-xs mb-3">
+          ${q.title}
+        </div>
+        <h2 class="text-lg sm:text-xl font-bold leading-relaxed mb-6 whitespace-pre-line">${q.question}</h2>
+
+        <div class="space-y-3">
+          ${q.options.map((opt, i) => `
+            <button onclick="selectQuizAnswer(${i})" class="w-full text-left p-4 rounded-xl border text-sm transition flex items-start gap-3 ${selected === i ? 'border-purple-500 bg-purple-500/10 ring-1 ring-purple-500' : 'hover:border-gray-600'}" style="border-color: ${selected === i ? '#a855f7' : 'var(--surface-border)'}; background: ${selected === i ? 'rgba(168,85,247,0.1)' : 'var(--surface)'}">
+              <div class="w-6 h-6 rounded-full border flex items-center justify-center text-xs font-bold shrink-0 ${selected === i ? 'bg-purple-500 text-white border-purple-500' : 'border-gray-500 text-gray-400'}">
+                ${String.fromCharCode(65 + i)}
+              </div>
+              <div class="flex-1">${opt.text}</div>
+            </button>
+          `).join("")}
+        </div>
+
+        <div class="flex items-center justify-between mt-8 pt-4 border-t" style="border-color: var(--surface-border)">
+          <button onclick="prevQuizQuestion()" ${currentQuizIndex === 0 ? 'disabled class="opacity-40 cursor-not-allowed"' : 'class="font-semibold text-xs text-gray-300 hover:text-white"'}>
+            ← Previous
+          </button>
+          ${currentQuizIndex === total - 1 ? `
+            <button onclick="submitKnowledgeQuiz()" ${selected === undefined ? 'disabled class="opacity-50 cursor-not-allowed px-5 py-2.5 rounded-lg bg-purple-600 text-white font-bold text-xs"' : 'class="px-6 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg transition"'}>
+              Submit & Grade Assessment ✓
+            </button>
+          ` : `
+            <button onclick="nextQuizQuestion()" ${selected === undefined ? 'disabled class="opacity-50 cursor-not-allowed px-5 py-2.5 rounded-lg bg-purple-600 text-white font-bold text-xs"' : 'class="px-5 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition"'}>
+              Next Question →
+            </button>
+          `}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function selectQuizAnswer(index) {
+  userQuizAnswers[currentQuizIndex] = index;
+  renderQuizQuestion();
+}
+
+function nextQuizQuestion() {
+  if (currentQuizIndex < KNOWLEDGE_QUESTIONS.length - 1) {
+    currentQuizIndex++;
+    renderQuizQuestion();
+  }
+}
+
+function prevQuizQuestion() {
+  if (currentQuizIndex > 0) {
+    currentQuizIndex--;
+    renderQuizQuestion();
+  }
+}
+
+function submitKnowledgeQuiz() {
+  let correctCount = 0;
+  const questionsTotal = KNOWLEDGE_QUESTIONS.length;
+  const detailedResults = [];
+
+  KNOWLEDGE_QUESTIONS.forEach((q, idx) => {
+    const userChoice = userQuizAnswers[idx];
+    const isCorrect = userChoice !== undefined && q.options[userChoice].isCorrect;
+    if (isCorrect) correctCount++;
+    detailedResults.push({
+      q,
+      userChoice,
+      isCorrect,
+      explanation: userChoice !== undefined ? q.options[userChoice].explanation : "Unanswered"
+    });
+  });
+
+  const kScore = Math.round((correctCount / questionsTotal) * 100);
+  const aScore = 70; // Baseline applied
+  const rScore = 75; // Reasoning
+
+  // Calculate Proficiency via PRD Formula: P = 0.30K + 0.50A + 0.20R
+  const { p } = calculateSkillProficiency(kScore, aScore, rScore);
+
+  // Update State for primary skill (Programming Fundamentals)
+  const targetSkill = "prog_vars";
+  const prevAttempts = (appState.skillProficiencies[targetSkill]?.attempts || 0) + 1;
+  const conf = calculateConfidence(prevAttempts, false, p);
+
+  appState.skillProficiencies[targetSkill] = {
+    k: kScore,
+    a: aScore,
+    r: rScore,
+    p: p,
+    confidence: conf,
+    attempts: prevAttempts,
+    lastAssessed: new Date().toISOString().split("T")[0]
+  };
+
+  // Add XP
+  appState.gamification.xp += 150;
+  saveState();
+
+  navigate("results", {
+    title: "Knowledge Assessment Results",
+    skillId: targetSkill,
+    kScore,
+    aScore,
+    rScore,
+    pScore: p,
+    correctCount,
+    total: questionsTotal,
+    detailedResults
+  });
+}
+
+// 9.4.2 PRACTICAL CODE SANDBOX RUNNER
+function renderCodeSandboxRunner(container, task) {
+  container.innerHTML = `
+    <div class="space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <button onclick="navigate('assessment')" class="text-xs text-gray-400 hover:text-white flex items-center gap-1 mb-2 font-semibold">
+            ← Back to Assessment Center
+          </button>
+          <h1 class="text-xl sm:text-2xl font-bold flex items-center gap-2">
+            <span>💻</span> Practical Sandbox: ${task.title}
+          </h1>
+        </div>
+        <span class="badge-pill bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
+          Automated Test Runner
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Left: Task Instructions & Test Cases -->
+        <div class="space-y-4">
+          <div class="glass-panel p-5">
+            <h3 class="font-bold text-sm mb-2 text-cyan-400">Scenario Context</h3>
+            <p class="text-xs text-gray-300 leading-relaxed mb-4">${task.scenario}</p>
+
+            <h3 class="font-bold text-sm mb-2 text-cyan-400">Requirements & Instructions</h3>
+            <ul class="text-xs text-gray-300 space-y-2 list-disc list-inside mb-4">
+              ${task.instructions.map(ins => `<li>${ins}</li>`).join("")}
+            </ul>
+
+            <div class="p-3 rounded-lg bg-black/30 border border-gray-800 text-[11px] text-gray-400">
+              <span class="font-semibold text-gray-300">Sandbox Rule (PRD §18):</span> Code executes inside a secure browser wrapper. Automated assertions will verify deterministic results.
+            </div>
+          </div>
+
+          <!-- Automated Test Cases Status Panel -->
+          <div class="glass-panel p-5">
+            <h3 class="font-bold text-sm mb-3">Automated Test Assertions (${task.tests.length})</h3>
+            <div id="test-results-box" class="space-y-2">
+              ${task.tests.map((t, idx) => `
+                <div class="p-2.5 rounded-lg border flex items-center justify-between text-xs" style="border-color: var(--surface-border); background: var(--bg-subtle)">
+                  <span class="text-gray-300">${t.name}</span>
+                  <span class="badge-pill bg-gray-700 text-gray-400 text-[10px]">Pending Run</span>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Code Editor & Execution Output -->
+        <div class="space-y-4">
+          <div class="glass-panel p-4 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono text-gray-400">sandbox.js (JavaScript ES6)</span>
+              <button onclick="resetTaskCode('${task.id}')" class="text-xs text-gray-400 hover:text-white">Reset Code</button>
+            </div>
+
+            <textarea id="code-input" class="code-editor-area w-full p-4 h-80 focus:outline-none focus:ring-1 focus:ring-cyan-500" spellcheck="false">${task.starterCode}</textarea>
+
+            <div class="flex items-center justify-between mt-4">
+              <div id="exec-status" class="text-xs text-gray-400">Ready to execute tests</div>
+              <button onclick="runSandboxCode('${task.id}')" class="px-5 py-2.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center gap-2 transition shadow-lg shadow-cyan-600/20">
+                <span>▶ Run Tests & Submit</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Console & AI Evaluation Feedback Container -->
+          <div id="ai-feedback-container" class="hidden glass-panel p-5 border border-purple-500/30 bg-purple-900/10">
+            <div class="flex items-center gap-2 text-xs font-bold text-purple-400 mb-2">
+              <span>🤖 OpenRouter AI Evaluator Feedback (PRD §15)</span>
+            </div>
+            <div id="ai-feedback-text" class="text-xs text-gray-300 leading-relaxed whitespace-pre-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function resetTaskCode(taskId) {
+  const task = PRACTICAL_TASKS.find(t => t.id === taskId);
+  if (task) {
+    document.getElementById("code-input").value = task.starterCode;
+    showToast("Code reset to starter template");
+  }
+}
+
+async function runSandboxCode(taskId) {
+  const task = PRACTICAL_TASKS.find(t => t.id === taskId);
+  if (!task) return;
+
+  const code = document.getElementById("code-input").value;
+  const statusEl = document.getElementById("exec-status");
+  const testBox = document.getElementById("test-results-box");
+  statusEl.textContent = "Executing automated assertions...";
+
+  let passedCount = 0;
+  const results = [];
+
+  try {
+    // Create safe sandbox function evaluation
+    const userFn = new Function(`${code}; return sanitizeUserPayload;`)();
+
+    for (const test of task.tests) {
+      let isPass = false;
+      let errMsg = "";
+      try {
+        const output = userFn(test.input);
+        isPass = test.expectedCheck(output);
+      } catch (e) {
+        errMsg = e.message;
+      }
+
+      if (isPass) passedCount++;
+      results.push({ name: test.name, isPass, errMsg });
+    }
+  } catch (err) {
+    statusEl.innerHTML = `<span class="text-red-400">Compilation Error: ${err.message}</span>`;
+    return;
+  }
+
+  // Render Test Results
+  testBox.innerHTML = results.map(r => `
+    <div class="p-2.5 rounded-lg border flex items-center justify-between text-xs" style="border-color: ${r.isPass ? '#10b981' : '#ef4444'}; background: ${r.isPass ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}">
+      <span class="text-gray-200 font-medium">${r.name}</span>
+      <span class="badge-pill ${r.isPass ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'} text-[10px]">
+        ${r.isPass ? 'Passed ✓' : 'Failed ✗'}
+      </span>
+    </div>
+  `).join("");
+
+  const aScore = Math.round((passedCount / task.tests.length) * 100);
+  statusEl.innerHTML = `<span class="${passedCount === task.tests.length ? 'text-emerald-400' : 'text-amber-400'} font-bold">${passedCount}/${task.tests.length} Tests Passed (Score: ${aScore}%)</span>`;
+
+  // Request OpenRouter AI Evaluation for Reasoning Score (R) & Rubric feedback
+  let aiFeedback = null;
+  const prompt = `Evaluate this student's JavaScript solution for a practical coding challenge:\n\nTask: ${task.scenario}\nCode:\n\`\`\`javascript\n${code}\n\`\`\`\nAutomated tests passed: ${passedCount}/${task.tests.length}.\n\nProvide 3 short bullet points: 1) Strengths, 2) Gaps or edge cases, 3) Next learning advice. Keep it concise.`;
+
+  statusEl.textContent = "Requesting OpenRouter AI qualitative rubric evaluation...";
+  aiFeedback = await callOpenRouterAI(prompt);
+
+  if (!aiFeedback) {
+    // Deterministic fallback (PRD §15.3 & §15.4)
+    aiFeedback = passedCount === task.tests.length
+      ? "• Strengths: All input boundaries, trimming, and type normalization pass correctly.\n• Gaps: Consider validating strict RFC-compliant email formats with regex in production.\n• Next Step: Explore asynchronous payload processing and schema validation with Zod."
+      : "• Strengths: Function structure is cleanly organized.\n• Gaps: Some edge cases (underage or missing email) failed assertions.\n• Next Step: Check nullish coalescing operators and ensure error arrays collect all failures.";
+  }
+
+  const aiBox = document.getElementById("ai-feedback-container");
+  const aiText = document.getElementById("ai-feedback-text");
+  if (aiBox && aiText) {
+    aiBox.classList.remove("hidden");
+    aiText.textContent = aiFeedback;
+  }
+
+  // Calculate overall proficiency using PRD Formula: P = 0.30K + 0.50A + 0.20R
+  const kScore = 80; // Baseline knowledge
+  const rScore = passedCount === task.tests.length ? 90 : 60;
+  const { p } = calculateSkillProficiency(kScore, aScore, rScore);
+
+  // Update State
+  const targetSkill = task.skillId;
+  const prevAttempts = (appState.skillProficiencies[targetSkill]?.attempts || 0) + 1;
+  const conf = calculateConfidence(prevAttempts, true, p);
+
+  appState.skillProficiencies[targetSkill] = {
+    k: kScore,
+    a: aScore,
+    r: rScore,
+    p: p,
+    confidence: conf,
+    attempts: prevAttempts,
+    lastAssessed: new Date().toISOString().split("T")[0]
+  };
+
+  // Add History attempt
+  appState.history.unshift({
+    id: `att_${Date.now()}`,
+    date: new Date().toLocaleDateString("en-US", { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+    skillId: targetSkill,
+    skillName: getSkillById(targetSkill)?.name || "Programming Task",
+    type: "Practical Code Sandbox",
+    k: kScore,
+    a: aScore,
+    r: rScore,
+    p: p,
+    passed: passedCount === task.tests.length,
+    feedback: aiFeedback
+  });
+
+  appState.gamification.xp += 200;
+  saveState();
+  showToast(`Practical assessment submitted! Earned +200 XP`, "⚡");
+}
+
+// 9.4.3 GAMIFIED CHALLENGE RUNNER
+let gameTimerInterval = null;
+let gameSecondsLeft = 0;
+
+function renderGamifiedRunner(container, game) {
+  gameSecondsLeft = game.timeLimit;
+  if (gameTimerInterval) clearInterval(gameTimerInterval);
+
+  container.innerHTML = `
+    <div class="max-w-4xl mx-auto space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <button onclick="navigate('assessment')" class="text-xs text-gray-400 hover:text-white flex items-center gap-1 mb-2 font-semibold">
+            ← Exit Challenge
+          </button>
+          <h1 class="text-xl sm:text-2xl font-extrabold flex items-center gap-2">
+            <span>🎮</span> ${game.title}
+          </h1>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="p-2 px-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 font-mono font-bold text-sm" id="game-timer">
+            03:00
+          </div>
+          <span class="badge-pill bg-purple-500/20 text-purple-400 border border-purple-500/30">
+            ${game.badge}
+          </span>
+        </div>
+      </div>
+
+      <div class="glass-panel p-6">
+        <h3 class="font-bold text-sm text-amber-400 mb-1">Mission Scenario</h3>
+        <p class="text-xs text-gray-300 leading-relaxed mb-4">${game.scenario}</p>
+
+        <div class="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 mb-4 flex items-center gap-2">
+          <span>💡</span> <span>Hint: ${game.hint}</span>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-xs font-mono text-gray-400">
+            <span>solution.js</span>
+            <span>Edit the code below to eliminate the defect</span>
+          </div>
+          <textarea id="game-code-input" class="code-editor-area w-full p-4 h-64 focus:outline-none focus:ring-1 focus:ring-amber-500" spellcheck="false">${game.buggyCode}</textarea>
+        </div>
+
+        <div id="game-status" class="mt-4 text-xs font-semibold text-gray-400"></div>
+
+        <div class="flex items-center justify-between mt-6 pt-4 border-t" style="border-color: var(--surface-border)">
+          <div class="text-xs text-gray-400">Reward: <strong>+250 XP</strong> & Bug Hunter Badge</div>
+          <button onclick="submitGameSolution('${game.id}')" class="px-6 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition shadow-lg shadow-amber-600/30">
+            Submit Solution ✓
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Start Countdown Timer
+  updateGameTimerDisplay();
+  gameTimerInterval = setInterval(() => {
+    gameSecondsLeft--;
+    updateGameTimerDisplay();
+    if (gameSecondsLeft <= 0) {
+      clearInterval(gameTimerInterval);
+      document.getElementById("game-status").innerHTML = `<span class="text-red-400 font-bold">Time Expired! You can still submit for partial credit.</span>`;
+    }
+  }, 1000);
+}
+
+function updateGameTimerDisplay() {
+  const el = document.getElementById("game-timer");
+  if (!el) return;
+  const m = Math.floor(gameSecondsLeft / 60);
+  const s = gameSecondsLeft % 60;
+  el.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}
+
+function submitGameSolution(gameId) {
+  if (gameTimerInterval) clearInterval(gameTimerInterval);
+  const game = GAMIFIED_CHALLENGES.find(g => g.id === gameId);
+  const code = document.getElementById("game-code-input").value;
+  const statusEl = document.getElementById("game-status");
+
+  let isSuccess = false;
+
+  try {
+    if (gameId === "game_bug_hunter") {
+      const fn = new Function(`${code}; return calculateCartTax;`)();
+      const res = fn([{ price: 10, qty: 1 }, { price: 20, qty: 2 }, { price: 15, qty: 1 }], 0.10);
+      isSuccess = res.subtotal === 65 && res.tax === 6.5;
+    } else if (gameId === "game_sql_detective") {
+      const fn = new Function(`${code}; return detectDuplicateAccounts;`)();
+      const res = fn([
+        { id: 1, phone: "555-0199", email: "a@x.com" },
+        { id: 2, phone: "555-0123", email: "b@x.com" },
+        { id: 3, phone: "555-0199", email: "c@x.com" }
+      ]);
+      isSuccess = Array.isArray(res) && res.length === 1 && res[0] === "555-0199";
+    } else {
+      isSuccess = code.includes("await") && (code.includes("201") || code.includes("status: 201"));
+    }
+  } catch (e) {
+    statusEl.innerHTML = `<span class="text-red-400">Execution Error: ${e.message}</span>`;
+    return;
+  }
+
+  if (isSuccess) {
+    appState.gamification.xp += 250;
+    saveState();
+    showToast("Challenge Solved! +250 XP earned", "🎉");
+    navigate("results", {
+      title: `${game.title} Completed!`,
+      skillId: "prog_logic",
+      kScore: 90,
+      aScore: 95,
+      rScore: 90,
+      pScore: 92,
+      passed: true,
+      feedback: "Defect diagnosed and repaired successfully. Loop invariants and boundary logic demonstrated."
+    });
+  } else {
+    statusEl.innerHTML = `<span class="text-amber-400">Test failed: The bug is still present. Review the hint and loop condition!</span>`;
+  }
+}
+
+/**
+ * 9.5 ASSESSMENT RESULTS SCREEN (PRD §12.1, §12.2, §15)
+ */
+function renderAssessmentResults(container, context = {}) {
+  const pScore = context.pScore || 75;
+  const kScore = context.kScore || 80;
+  const aScore = context.aScore || 70;
+  const rScore = context.rScore || 75;
+  const skill = getSkillById(context.skillId || "prog_vars");
+
+  container.innerHTML = `
+    <div class="max-w-3xl mx-auto space-y-6">
+      <div class="glass-panel p-6 sm:p-8 text-center bg-gradient-to-b from-blue-900/30 to-transparent border border-blue-500/30">
+        <div class="inline-flex p-3 rounded-full bg-emerald-500/20 text-emerald-400 text-3xl mb-3">
+          ✓
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold mb-1">${context.title || "Assessment Evaluated"}</h1>
+        <p class="text-xs text-gray-400 mb-6">Evidence recorded into your skill profile under ${skill?.name || "Technical Core"}</p>
+
+        <!-- Main Proficiency Score -->
+        <div class="inline-block p-6 rounded-2xl bg-black/40 border border-gray-800 mb-6">
+          <div class="text-xs font-semibold text-gray-400 mb-1">Demonstrated Proficiency</div>
+          <div class="text-5xl font-black text-blue-400">${pScore}%</div>
+          <div class="text-xs font-mono text-gray-500 mt-2">Formula: P = 0.30(K) + 0.50(A) + 0.20(R)</div>
+        </div>
+
+        <!-- 3 Formula Component Cards -->
+        <div class="grid grid-cols-3 gap-3 max-w-lg mx-auto text-left">
+          <div class="p-3 rounded-xl bg-purple-500/10 border border-purple-500/20">
+            <div class="text-[11px] text-purple-300 font-semibold">Knowledge (K)</div>
+            <div class="text-xl font-bold text-purple-400">${kScore}%</div>
+            <div class="text-[10px] text-gray-400 mt-1">Weight: 30%</div>
+          </div>
+          <div class="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+            <div class="text-[11px] text-cyan-300 font-semibold">Applied (A)</div>
+            <div class="text-xl font-bold text-cyan-400">${aScore}%</div>
+            <div class="text-[10px] text-gray-400 mt-1">Weight: 50%</div>
+          </div>
+          <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
+            <div class="text-[11px] text-amber-300 font-semibold">Reasoning (R)</div>
+            <div class="text-xl font-bold text-amber-400">${rScore}%</div>
+            <div class="text-[10px] text-gray-400 mt-1">Weight: 20%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Qualitative Feedback & Strengths / Gaps -->
+      <div class="glass-panel p-6">
+        <h3 class="font-bold text-sm mb-3">Qualitative Assessment Feedback</h3>
+        <p class="text-xs text-gray-300 leading-relaxed mb-4">
+          ${context.feedback || "Your submission demonstrates solid foundations with structured error handling. Review reference comparisons to eliminate subtle edge bugs."}
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t" style="border-color: var(--surface-border)">
+          <div class="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+            <div class="text-xs font-bold text-emerald-400 mb-1 flex items-center gap-1.5">
+              <span>✓</span> Demonstrated Strengths
+            </div>
+            <ul class="text-[11px] text-gray-300 space-y-1 list-disc list-inside">
+              <li>Deterministic logic flow & sanitization</li>
+              <li>Clean variable scoping without leaks</li>
+            </ul>
+          </div>
+
+          <div class="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+            <div class="text-xs font-bold text-amber-400 mb-1 flex items-center gap-1.5">
+              <span>⚠️</span> Identified Knowledge Gaps
+            </div>
+            <ul class="text-[11px] text-gray-300 space-y-1 list-disc list-inside">
+              <li>Stale closures and hook dependency synchronization</li>
+              <li>Non-idempotent HTTP method handling</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <button onclick="navigate('dashboard')" class="px-5 py-2.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold text-xs transition">
+          ← Back to Dashboard
+        </button>
+        <div class="flex items-center gap-3">
+          <button onclick="navigate('learning')" class="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition">
+            View Targeted Learning Resources →
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * 9.6 MY SKILLS & EVIDENCE LEDGER (PRD §12.1 & §12.2)
+ */
+function renderMySkills(container) {
+  const skillsList = Object.entries(appState.skillProficiencies).map(([id, prof]) => {
+    return { ...prof, ...getSkillById(id), skillId: id };
+  });
+
+  function tierBadge(p) {
+    if (p >= 85) return '<span class="tier-badge tier-master">Master</span>';
+    if (p >= 70) return '<span class="tier-badge tier-advanced">Advanced</span>';
+    if (p >= 55) return '<span class="tier-badge tier-proficient">Proficient</span>';
+    if (p >= 35) return '<span class="tier-badge tier-developing">Developing</span>';
+    return '<span class="tier-badge tier-foundational">Foundational</span>';
+  }
+
+  container.innerHTML = `
+    <div class="fade-in">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h1>My <span class="gradient-text">Skills Ledger</span></h1>
+            <p>Proficiency = P = 0.30K + 0.50A + 0.20R · Confidence reflects attempt count &amp; test variety.</p>
+          </div>
+          <span class="status-pill status-inprogress">${skillsList.length} Skills with Evidence</span>
+        </div>
+      </div>
+
+      ${skillsList.length === 0 ? `
+        <div class="card empty-state">
+          <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          <h3>No Skills Assessed Yet</h3>
+          <p>Take a practical task to build your skill evidence ledger.</p>
+          <button onclick="navigate('assessment')" class="btn-primary" style="margin-top:16px;">🎯 Start Assessment</button>
+        </div>
+      ` : `
+        <div class="skill-grid">
+          ${skillsList.map(item => {
+            const r = 20, circ = +(2*Math.PI*r).toFixed(2), offset = +(circ-(item.p/100)*circ).toFixed(2);
+            const confClass = item.confidence && item.confidence.includes('Verified') ? 'status-verified' : item.confidence && item.confidence.includes('Medium') ? 'status-inprogress' : 'status-notstarted';
+            return `
+              <div class="skill-card">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+                  <div>
+                    <div class="skill-name">${item.name || item.skillId}</div>
+                    <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">${item.core?.name || 'Core Skill'}</div>
+                  </div>
+                  <div class="progress-ring-wrap" style="width:50px;height:50px;flex-shrink:0;">
+                    <svg width="50" height="50" style="transform:rotate(-90deg)">
+                      <circle cx="25" cy="25" r="${r}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5"/>
+                      <circle cx="25" cy="25" r="${r}" fill="none" stroke="#6366f1" stroke-width="5"
+                        stroke-dasharray="${circ}" stroke-dashoffset="${offset}" stroke-linecap="round" style="transition:1s ease"/>
+                    </svg>
+                    <div class="ring-label"><span class="ring-pct" style="color:#818cf8;font-size:0.75rem;">${item.p}%</span></div>
+                  </div>
+                </div>
+
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  ${tierBadge(item.p)}
+                  <span class="status-pill ${confClass}" style="font-size:0.65rem;">${item.confidence}</span>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:5px;">
+                  <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;color:var(--text-muted);">
+                    <span>Knowledge</span><span style="color:#c084fc;font-weight:600;">${item.k}%</span>
+                  </div>
+                  <div class="mini-bar"><div class="mini-bar-fill" style="width:${item.k}%;background:#a855f7;"></div></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;color:var(--text-muted);">
+                    <span>Applied</span><span style="color:#22d3ee;font-weight:600;">${item.a}%</span>
+                  </div>
+                  <div class="mini-bar"><div class="mini-bar-fill" style="width:${item.a}%;background:#06b6d4;"></div></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;color:var(--text-muted);">
+                    <span>Reasoning</span><span style="color:#fbbf24;font-weight:600;">${item.r}%</span>
+                  </div>
+                  <div class="mini-bar"><div class="mini-bar-fill" style="width:${item.r}%;background:#f59e0b;"></div></div>
+                </div>
+
+                <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid var(--surface-border);">
+                  <span style="font-size:0.68rem;color:var(--text-muted);">${item.attempts} attempt${item.attempts !== 1 ? 's' : ''}</span>
+                  <button onclick="navigate('assessment', { skillId: '${item.skillId}' })" class="btn-ghost" style="font-size:0.72rem;padding:4px 8px;">Reassess →</button>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `}
+    </div>
+  `;
+}
+
+/**
+ * 9.7 LEARNING HUB
+/**
+ * 9.7 LEARNING HUB (PRD §11 & §6.7)
+ * Strictly separates learning completion from proficiency!
+ */
+function renderLearningHub(container) {
+  const completedCount = Object.keys(appState.learningProgress).length;
+  const typeIcons = { 'Interactive Guide': '🗺️', 'Architecture Document': '📐', 'Code Walkthrough': '💻', 'Coding Exercise': '⚡', 'Interactive Walkthrough': '🧩', 'Practical Guide': '🔬' };
+  const diffColor = { Foundational: '#34d399', Intermediate: '#818cf8', Advanced: '#f59e0b' };
+
+  container.innerHTML = `
+    <div class="fade-in">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h1>Learning <span class="gradient-text">Hub</span></h1>
+            <p>Curated resources mapped to your skill gaps. Completion ≠ Proficiency — requires assessment verification.</p>
+          </div>
+          <span class="status-pill status-inprogress">${completedCount} / ${LEARNING_RESOURCES.length} Studied</span>
+        </div>
+      </div>
+
+      <div style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:12px 16px;display:flex;align-items:flex-start;gap:10px;font-size:0.8125rem;margin-bottom:20px;">
+        <span>📌</span>
+        <div><strong style="color:#60a5fa;">PRD §6.7: </strong><span style="color:var(--text-muted);">Skill proficiency and learning completion are tracked independently. Real proficiency requires a verification challenge.</span></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;">
+        ${LEARNING_RESOURCES.map(res => {
+          const isDone = appState.learningProgress[res.id]?.completed;
+          const skill = getSkillById(res.skillId);
+          const icon = typeIcons[res.type] || '📄';
+          const dc = diffColor[res.difficulty] || '#818cf8';
+          return `
+            <div class="resource-card ${isDone ? 'border-emerald-500/30' : ''}" style="${isDone ? 'border-color:rgba(16,185,129,0.3);' : ''}">
+              <div class="resource-icon" style="background:${isDone ? 'rgba(16,185,129,0.15)' : 'rgba(99,102,241,0.1)'};">${isDone ? '✅' : icon}</div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
+                  <span style="background:${dc}20;color:${dc};border:1px solid ${dc}40;font-size:0.65rem;font-weight:700;padding:2px 7px;border-radius:20px;">${res.difficulty}</span>
+                  <span style="background:var(--surface-border);color:var(--text-muted);font-size:0.65rem;font-weight:600;padding:2px 7px;border-radius:20px;">${res.type}</span>
+                  <span style="font-size:0.68rem;color:var(--text-muted);">⏱ ${res.duration}</span>
+                </div>
+                <div style="font-size:0.875rem;font-weight:700;margin-bottom:4px;line-height:1.3;">${res.title}</div>
+                <div style="font-size:0.775rem;color:var(--text-muted);line-height:1.4;margin-bottom:10px;">${res.summary}</div>
+                <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:10px;">Skill: <strong style="color:var(--text-main);">${skill?.name || res.skillId}</strong></div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  ${!isDone ? `<button onclick="markLearningComplete('${res.id}')" class="btn-primary" style="font-size:0.775rem;padding:6px 14px;">Mark as Read</button>` : '<span class="status-pill status-verified">✓ Completed</span>'}
+                  <button onclick="navigate('assessment', { skillId: '${res.skillId}' })" class="btn-ghost" style="font-size:0.775rem;">Verify with Assessment →</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * 9.8 CAREER ROADMAP
+/**
+ * 9.8 CAREER ROADMAP SCREEN (PRD §12.4 & §13)
+ */
+function renderCareerRoadmap(container) {
+  const targetRoleId = appState.user.targetRoleId || "fs_dev";
+  const { role, alignmentPercentage, skillBreakdown, mandatoryGaps } = calculateRoleAlignment(targetRoleId);
+
+  const milestones = [
+    {
+      title: 'Foundational Programming & Syntax',
+      desc: 'Variables, data structures, and conditional logic assessed with verified scores above 70%.',
+      status: 'complete', label: 'Complete', pct: 100
+    },
+    {
+      title: 'Resolve Mandatory Role Deficits',
+      desc: 'Elevate React state management and relational SQL to minimum required 65%+ thresholds.',
+      status: mandatoryGaps.length > 0 ? 'active' : 'complete',
+      label: mandatoryGaps.length > 0 ? mandatoryGaps.length + ' Gaps Remaining' : 'Complete', pct: mandatoryGaps.length > 0 ? 55 : 100
+    },
+    {
+      title: 'Production Readiness & API Reliability',
+      desc: 'Automated testing, token security, and database indexing across real-world workloads.',
+      status: 'locked', label: 'Locked', pct: 0
+    },
+    {
+      title: 'Portfolio: End-to-End Project Evidence',
+      desc: "Build and deploy a full project demonstrating your target role's full skill stack.",
+      status: 'locked', label: 'Locked', pct: 0
+    }
+  ];
+
+  const statusDot = { complete: '#10b981', active: '#f59e0b', locked: 'var(--text-subtle)' };
+  const statusBadge = {
+    complete: 'status-verified',
+    active: 'status-inprogress',
+    locked: 'status-notstarted'
+  };
+
+  container.innerHTML = `
+    <div class="fade-in">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h1>Career <span class="gradient-text">Roadmap</span></h1>
+            <p>Evidence-based milestone progression for <strong>${role.name}</strong>. Target readiness: 80%+.</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:0.8rem;color:var(--text-muted);">Current readiness:</span>
+            <span style="font-size:1.2rem;font-weight:800;color:${alignmentPercentage >= 70 ? '#34d399' : '#818cf8'};">${alignmentPercentage}%</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start;" class="roadmap-grid">
+        <div class="timeline">
+          ${milestones.map((m, i) => `
+            <div class="timeline-item">
+              <div class="timeline-line">
+                <div class="timeline-dot" style="background:${m.status === 'locked' ? 'var(--surface-border)' : statusDot[m.status]};color:white;">${i+1}</div>
+                ${i < milestones.length - 1 ? '<div class="timeline-connector"></div>' : ''}
+              </div>
+              <div class="timeline-body ${m.status === 'locked' ? 'opacity-60' : ''}">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
+                  <span class="status-pill ${statusBadge[m.status]}">Milestone ${i+1} · ${m.label}</span>
+                  ${m.status !== 'locked' ? `<span style="font-size:0.75rem;font-weight:700;color:${statusDot[m.status]};">${m.pct}%</span>` : ''}
+                </div>
+                <div style="font-size:0.95rem;font-weight:700;margin-bottom:6px;">${m.title}</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;margin-bottom:${m.status === 'active' ? '12px' : '0'};">${m.desc}</div>
+                ${m.status === 'active' ? `<button onclick="navigate('assessment')" class="btn-primary" style="font-size:0.775rem;">Take Deficit Assessments →</button>` : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card" style="padding:18px;">
+            <div class="section-label">Role Skill Requirements</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+              ${skillBreakdown.map(skill => `
+                <div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.775rem;margin-bottom:4px;">
+                    <span style="font-weight:600;">${skill.name.split(' (')[0]}</span>
+                    <span style="font-weight:700;color:${skill.currentScore >= skill.minProficiency ? '#34d399' : '#fbbf24'}">${skill.currentScore}%</span>
+                  </div>
+                  <div class="mini-bar"><div class="mini-bar-fill" style="width:${skill.currentScore}%;background:${skill.currentScore >= skill.minProficiency ? '#10b981' : '#f59e0b'};"></div></div>
+                  <div style="font-size:0.65rem;color:var(--text-muted);margin-top:2px;">Min: ${skill.minProficiency}% · Weight: ${Math.round(skill.weight*100)}%</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          <button onclick="navigate('assessment')" class="btn-primary" style="width:100%;justify-content:center;">🎯 Take Next Assessment</button>
+          <button onclick="navigate('roles')" class="btn-secondary" style="width:100%;justify-content:center;">Change Target Role</button>
+        </div>
+      </div>
+    </div>
+    <style>@media(max-width:800px){.roadmap-grid{grid-template-columns:1fr !important;}}</style>
+  `;
+}
+
+/**
+ * 9.9 ASSESSMENT HISTORY
+/**
+ * 9.9 ASSESSMENT HISTORY SCREEN (PRD §13)
+ */
+function renderHistory(container) {
+  container.innerHTML = `
+    <div class="space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Assessment History & Audit Trail</h1>
+          <p class="text-sm text-gray-400 mt-1">
+            Permanent record of your technical evaluations, code submissions, and rubric feedback.
+          </p>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        ${appState.history.map(att => `
+          <div class="glass-panel p-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <div>
+                <span class="font-bold text-base text-gray-100">${att.skillName}</span>
+                <span class="text-xs text-gray-400 ml-2">(${att.type})</span>
+              </div>
+              <div class="flex items-center gap-3 text-xs">
+                <span class="text-gray-400">${att.date}</span>
+                <span class="badge-pill ${att.passed ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'} font-bold">
+                  Score: ${att.p}%
+                </span>
+              </div>
+            </div>
+
+            <div class="font-mono text-xs text-gray-400 mb-3">
+              Component Scores: K: <span class="text-purple-400">${att.k}%</span> | A: <span class="text-cyan-400">${att.a}%</span> | R: <span class="text-amber-400">${att.r}%</span>
+            </div>
+
+            <p class="text-xs text-gray-300 bg-black/20 p-3 rounded-lg border border-gray-800 leading-relaxed">
+              ${att.feedback}
+            </p>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * 9.10 DEDICATED AI CHAT MENTOR SPACE (PRD §15)
+ * Direct interactive space for Gemini 2.0 Flash Lite with NVIDIA Nemotron 70B failover
+ */
+function renderAIChat(container) {
+  if (!appState.aiChatHistory || !Array.isArray(appState.aiChatHistory)) {
+    appState.aiChatHistory = [
+      {
+        role: "assistant",
+        content: `👋 Hello ${appState.user.name}! I am your **REadON AI Career & Code Mentor**, powered by **Google Gemini 2.0 Flash Lite** with automatic failover to **NVIDIA Nemotron 70B**.
+
+I have full visibility into your **${CAREER_ROLES.find(r => r.id === appState.user.targetRoleId)?.name || 'Full-Stack'}** target role, your verified skill scores, and mandatory deficits.
+
+How can I assist your engineering growth today? Feel free to ask technical questions, request code reviews, or ask for a study plan!`,
+        model: "Gemini 2.0 / NVIDIA Nemotron"
+      }
+    ];
+  }
+
+  container.innerHTML = `
+    <div class="fade-in max-w-4xl mx-auto space-y-4">
+      <!-- Header Banner -->
+      <div class="card" style="padding:20px 24px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+              <span style="font-size:1.25rem;">🤖</span>
+              <h1 style="font-size:1.4rem;font-weight:800;margin:0;">AI Career & Code <span class="gradient-text">Mentor Space</span></h1>
+            </div>
+            <p style="color:var(--text-muted);font-size:0.8rem;margin:0;">
+              Interactive technical guidance powered by <strong>Google Gemini 2.0 Flash Lite</strong> with failover to <strong>NVIDIA Nemotron 70B</strong>.
+            </p>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <span class="status-pill status-verified" style="font-size:0.7rem;">🟢 Active Engine</span>
+            <button onclick="clearAIChatHistory()" class="btn-ghost" style="font-size:0.75rem;padding:5px 10px;" title="Reset chat history">
+              🗑️ Clear Chat
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Prompt Suggestions Chips -->
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;" class="hide-scrollbar">
+        <button onclick="sendQuickPrompt('Analyze my skill gaps for my target role')" class="btn-secondary" style="font-size:0.75rem;padding:6px 12px;white-space:nowrap;border-radius:20px;">
+          🎯 Analyze My Role Gaps
+        </button>
+        <button onclick="sendQuickPrompt('Explain why P = 0.30K + 0.50A + 0.20R prioritizes practical ability')" class="btn-secondary" style="font-size:0.75rem;padding:6px 12px;white-space:nowrap;border-radius:20px;">
+          📐 Explain Scoring Formula
+        </button>
+        <button onclick="sendQuickPrompt('Give me a hands-on coding task to practice SQL relational joins')" class="btn-secondary" style="font-size:0.75rem;padding:6px 12px;white-space:nowrap;border-radius:20px;">
+          💻 Suggest SQL Challenge
+        </button>
+        <button onclick="sendQuickPrompt('How do I optimize algorithmic time complexity from O(n^2) to O(n)?')" class="btn-secondary" style="font-size:0.75rem;padding:6px 12px;white-space:nowrap;border-radius:20px;">
+          ⚡ Optimize Time Complexity
+        </button>
+      </div>
+
+      <!-- Chat History Box -->
+      <div id="ai-chat-box" class="card" style="padding:20px;height:480px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;">
+        ${appState.aiChatHistory.map(msg => renderChatMessageBubble(msg)).join("")}
+      </div>
+
+      <!-- Input Bar -->
+      <div class="card" style="padding:14px 16px;">
+        <form onsubmit="handleAIChatSubmit(event)" style="display:flex;gap:10px;align-items:flex-end;">
+          <textarea id="ai-chat-input" rows="2" placeholder="Ask your AI mentor about code, algorithms, career gaps, or architecture... (Shift+Enter for newline)" class="code-editor-area" style="flex:1;background:var(--bg-subtle);resize:none;padding:10px 14px;border-radius:8px;font-size:0.85rem;" onkeydown="handleChatKeyDown(event)"></textarea>
+          <button type="submit" id="btn-send-chat" class="btn-primary" style="padding:10px 18px;height:42px;display:flex;align-items:center;gap:6px;">
+            <span>Send</span>
+            <span>➤</span>
+          </button>
+        </form>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:0.68rem;color:var(--text-subtle);">
+          <span>Press <strong>Enter</strong> to send, <strong>Shift + Enter</strong> for a new line.</span>
+          <span>Target Context: <strong>${CAREER_ROLES.find(r => r.id === appState.user.targetRoleId)?.name || 'Full-Stack'}</strong></span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Auto scroll to bottom
+  const box = document.getElementById("ai-chat-box");
+  if (box) box.scrollTop = box.scrollHeight;
+}
+
+function renderChatMessageBubble(msg) {
+  const isUser = msg.role === "user";
+  const formattedContent = escapeHtml(msg.content)
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code style="background:rgba(0,0,0,0.3);padding:2px 5px;border-radius:4px;color:#818cf8;font-size:0.8rem;">$1</code>')
+    .replace(/\n/g, '<br>');
+
+  return `
+    <div style="display:flex;gap:12px;align-items:flex-start;${isUser ? 'flex-direction:row-reverse;' : ''}">
+      <div style="width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;${isUser ? 'background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;' : 'background:linear-gradient(135deg,#8b5cf6,#ec4899);color:white;'}">
+        ${isUser ? 'AU' : '🤖'}
+      </div>
+      <div style="max-width:82%;display:flex;flex-direction:column;align-items:${isUser ? 'flex-end' : 'flex-start'};gap:4px;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:0.7rem;color:var(--text-muted);">
+          <span>${isUser ? appState.user.name : 'REadON AI Mentor'}</span>
+          ${msg.model ? `<span style="background:rgba(99,102,241,0.15);color:#818cf8;border:1px solid rgba(99,102,241,0.25);border-radius:10px;padding:1px 6px;font-size:0.6rem;">${msg.model}</span>` : ''}
+        </div>
+        <div style="padding:12px 16px;border-radius:12px;font-size:0.85rem;line-height:1.6;${isUser ? 'background:var(--accent);color:white;border-top-right-radius:2px;' : 'background:var(--surface-2);border:1px solid var(--surface-border);color:var(--text-main);border-top-left-radius:2px;'}">
+          ${formattedContent}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function handleChatKeyDown(event) {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    handleAIChatSubmit(event);
+  }
+}
+
+function sendQuickPrompt(promptText) {
+  const input = document.getElementById("ai-chat-input");
+  if (input) {
+    input.value = promptText;
+    handleAIChatSubmit(new Event('submit'));
+  }
+}
+
+function clearAIChatHistory() {
+  if (confirm("Reset AI Mentor chat conversation?")) {
+    appState.aiChatHistory = [];
+    saveState();
+    navigate("aichat");
+    showToast("Chat history cleared", "🧹");
+  }
+}
+
+async function handleAIChatSubmit(event) {
+  if (event) event.preventDefault();
+  const input = document.getElementById("ai-chat-input");
+  const sendBtn = document.getElementById("btn-send-chat");
+  const chatBox = document.getElementById("ai-chat-box");
+  if (!input) return;
+
+  const userText = input.value.trim();
+  if (!userText) return;
+
+  // Append user message
+  const userMsg = { role: "user", content: userText };
+  appState.aiChatHistory.push(userMsg);
+  input.value = "";
+  saveState();
+
+  // Re-render chat box
+  chatBox.innerHTML = appState.aiChatHistory.map(msg => renderChatMessageBubble(msg)).join("") + `
+    <div id="ai-typing-indicator" style="display:flex;gap:12px;align-items:center;">
+      <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:white;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🤖</div>
+      <div style="font-size:0.775rem;color:#818cf8;display:flex;align-items:center;gap:6px;" class="animate-pulse">
+        <span>AI Mentor is reasoning (Gemini 2.0 / NVIDIA Nemotron)...</span>
+      </div>
+    </div>
+  `;
+  chatBox.scrollTop = chatBox.scrollHeight;
+  if (sendBtn) sendBtn.disabled = true;
+
+  // Format messages for AI
+  const historyForAPI = appState.aiChatHistory.slice(-8).map(m => ({
+    role: m.role,
+    content: m.content
+  }));
+
+  let aiReplyText = "";
+  let modelBadge = "Gemini 2.0 Flash Lite";
+
+  // 1. Attempt Backend API call
+  try {
+    const response = await fetch('/api/v1/ai/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: historyForAPI,
+        context: {
+          currentRole: CAREER_ROLES.find(r => r.id === appState.user.targetRoleId)?.name,
+          xp: appState.gamification.xp,
+          streak: appState.gamification.streak
+        }
+      })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data && data.message) {
+        aiReplyText = data.message;
+        modelBadge = data.modelUsed ? data.modelUsed.split('/').pop() : "Gemini 2.0 / Nemotron";
+      }
+    }
+  } catch (backendErr) {
+    console.log("Backend AI chat route unreachable, falling back to direct OpenRouter:", backendErr.message);
+  }
+
+  // 2. Client fallback via direct OpenRouter if backend was unavailable
+  if (!aiReplyText) {
+    try {
+      const directAI = await callOpenRouterAI(userText);
+      if (directAI) {
+        aiReplyText = directAI;
+        modelBadge = "OpenRouter Direct";
+      }
+    } catch (e) {}
+  }
+
+  // 3. Deterministic mentor fallback if both failed
+  if (!aiReplyText) {
+    const targetRoleName = CAREER_ROLES.find(r => r.id === appState.user.targetRoleId)?.name || "Full-Stack Developer";
+    aiReplyText = `🎯 **REadON Mentor Guidance (${targetRoleName})**:
+
+Regarding: *"${userText.slice(0, 80)}"*
+
+• **Core Principle**: In REadON, engineering capability is evaluated via **P = 0.30K + 0.50A + 0.20R**.
+• **Practical Assessment**: The best way to build your profile is to take a hands-on practical task in the **Assessment** tab where automated assertions verify your logic in an isolated sandbox.
+• **Gaps**: Review your Dashboard for critical gap warnings before interviewing!`;
+    modelBadge = "Offline Baseline";
+  }
+
+  // Append assistant message
+  appState.aiChatHistory.push({
+    role: "assistant",
+    content: aiReplyText,
+    model: modelBadge
+  });
+  saveState();
+
+  if (sendBtn) sendBtn.disabled = false;
+  chatBox.innerHTML = appState.aiChatHistory.map(msg => renderChatMessageBubble(msg)).join("");
+  chatBox.scrollTop = chatBox.scrollHeight;
+  if (input) input.focus();
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/**
+ * 9.11 SETTINGS & PROFILE SCREEN (PRD §14.1 & §15)
+ */
+function renderSettings(container) {
+  container.innerHTML = `
+    <div class="max-w-2xl mx-auto space-y-6">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Settings & AI Configuration</h1>
+        <p class="text-sm text-gray-400 mt-1">Manage your profile, target career role, and OpenRouter AI gateway.</p>
+      </div>
+
+      <!-- User Profile Settings -->
+      <div class="glass-panel p-6 space-y-4">
+        <h3 class="font-bold text-base border-b pb-2" style="border-color: var(--surface-border)">User Profile</h3>
+        
+        <div>
+          <label class="block text-xs font-semibold text-gray-400 mb-1">Full Name</label>
+          <input id="setting-name" type="text" value="${appState.user.name}" class="w-full p-2.5 rounded-lg border text-sm" style="border-color: var(--surface-border); background: var(--bg-subtle)">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-400 mb-1">Experience Level / Persona</label>
+          <select id="setting-persona" class="w-full p-2.5 rounded-lg border text-sm" style="border-color: var(--surface-border); background: var(--bg-subtle)">
+            <option ${appState.user.experienceLevel.includes('Explorer') ? 'selected' : ''}>Explorer / Beginner</option>
+            <option ${appState.user.experienceLevel.includes('Student') ? 'selected' : ''}>College Student / Fresher</option>
+            <option ${appState.user.experienceLevel.includes('Job') ? 'selected' : ''}>Job Seeker / Transitioning</option>
+            <option ${appState.user.experienceLevel.includes('Professional') ? 'selected' : ''}>Working Professional</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-400 mb-1">Target Career Role</label>
+          <select id="setting-role" class="w-full p-2.5 rounded-lg border text-sm" style="border-color: var(--surface-border); background: var(--bg-subtle)">
+            ${CAREER_ROLES.map(r => `
+              <option value="${r.id}" ${r.id === appState.user.targetRoleId ? 'selected' : ''}>${r.name} (${r.status})</option>
+            `).join("")}
+          </select>
+        </div>
+      </div>
+
+      <!-- OpenRouter AI Settings (PRD §15) -->
+      <div class="glass-panel p-6 space-y-4">
+        <h3 class="font-bold text-base border-b pb-2 text-purple-400 flex items-center justify-between" style="border-color: var(--surface-border)">
+          <span>OpenRouter AI Configuration (PRD §15)</span>
+          <span class="badge-pill bg-purple-500/20 text-purple-300 text-[10px]">Free Tier Enabled</span>
+        </h3>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-400 mb-1">OpenRouter API Key (Loaded from PRD)</label>
+          <input id="setting-apikey" type="password" value="${appState.aiSettings.apiKey}" class="w-full p-2.5 rounded-lg border text-sm font-mono" style="border-color: var(--surface-border); background: var(--bg-subtle)">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-400 mb-1">Primary Model Route</label>
+          <input id="setting-model" type="text" value="${appState.aiSettings.model}" class="w-full p-2.5 rounded-lg border text-sm font-mono" style="border-color: var(--surface-border); background: var(--bg-subtle)">
+          <div class="text-[11px] text-gray-500 mt-1">Recommended: <code>google/gemini-2.0-flash-lite:free</code></div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-400 mb-1">Fallback Model Route (NVIDIA Nemotron)</label>
+          <input id="setting-fallback-model" type="text" value="${appState.aiSettings.fallbackModel || 'nvidia/llama-3.1-nemotron-70b-instruct'}" class="w-full p-2.5 rounded-lg border text-sm font-mono" style="border-color: var(--surface-border); background: var(--bg-subtle)">
+          <div class="text-[11px] text-gray-500 mt-1">Automatically invoked if primary model fails or times out: <code>nvidia/llama-3.1-nemotron-70b-instruct</code></div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-4">
+        <button onclick="resetAllData()" class="text-xs font-semibold text-red-400 hover:underline">
+          Reset All Data to PRD Defaults
+        </button>
+        <button onclick="saveSettings()" class="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-lg">
+          Save Settings
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function saveSettings() {
+  const name = document.getElementById("setting-name").value;
+  const persona = document.getElementById("setting-persona").value;
+  const role = document.getElementById("setting-role").value;
+  const apiKey = document.getElementById("setting-apikey").value;
+  const model = document.getElementById("setting-model").value;
+  const fallbackModel = document.getElementById("setting-fallback-model") ? document.getElementById("setting-fallback-model").value : "nvidia/llama-3.1-nemotron-70b-instruct";
+
+  appState.user.name = name;
+  appState.user.experienceLevel = persona;
+  appState.user.targetRoleId = role;
+  appState.aiSettings.apiKey = apiKey;
+  appState.aiSettings.model = model;
+  appState.aiSettings.fallbackModel = fallbackModel;
+
+  saveState();
+  showToast("Settings updated successfully!", "✓");
+}
+
+function resetAllData() {
+  if (confirm("Reset your skill data and assessment history to default PRD baseline?")) {
+    appState = { ...DEFAULT_STATE };
+    saveState();
+    showToast("Data reset to PRD baseline", "🔄");
+    navigate("dashboard");
+  }
+}
+
+// ==========================================
+// 10. INITIALIZATION
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.documentElement.setAttribute("data-theme", appState.theme || "dark");
+  updateThemeIcons();
+  updateNavHeader();
+  navigate("dashboard");
+});
+
+
+</script>
+</body>
+</html>
