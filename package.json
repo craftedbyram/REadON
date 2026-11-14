@@ -9,6 +9,9 @@
     "seed": "node backend/db/seed.js",
     "test": "node tests/test_api.js"
   },
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "keywords": [
     "skill-assessment",
     "career-development",
